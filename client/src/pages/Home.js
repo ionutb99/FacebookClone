@@ -1,11 +1,18 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import {
+  faLocationDot,
+  faCaretDown,
+  faEllipsisV,
+} from "@fortawesome/free-solid-svg-icons";
 import newsImg from "../images/news.png";
 import friendsImg from "../images/friends.png";
 import groupImg from "../images/news.png";
 import marketplaceImg from "../images/marketplace.png";
 import watchImg from "../images/watch.png";
+import LiveVideo from "../images/live-video.png";
+import Photo from "../images/photo.png";
+import Feeling from "../images/feeling.png";
 import Shortcut1 from "../images/shortcut-1.png";
 import Shortcut2 from "../images/shortcut-2.png";
 import Shortcut3 from "../images/shortcut-3.png";
@@ -16,6 +23,13 @@ import Member2 from "../images/member-2.png";
 import Member3 from "../images/member-3.png";
 import Member4 from "../images/member-4.png";
 import UploadImg1 from "../images/upload.png";
+import ProfileImg from "../images/profile-pic.png";
+import FeedImage1 from "../images/feed-image-1.png";
+import FeedImage2 from "../images/feed-image-2.png";
+import LikeBlueBtn from "../images/like-blue.png";
+import LikeWhiteBtn from "../images/like.png";
+import CommentsBtn from "../images/comments.png";
+import ShareBtn from "../images/share.png";
 
 export const Home = () => {
   return (
@@ -56,35 +70,144 @@ export const Home = () => {
         </div>
       </div>
 
-
-
       <div className="main-content">
         <div className="story-gallery">
-            <div className="story story1">
-                <img src={UploadImg1} alt="uploadImg1" />
-                <p>Post Story</p>
+          <div className="story story1">
+            <img src={UploadImg1} alt="uploadImg1" />
+            <p>Post Story</p>
+          </div>
+          <div className="story story2">
+            <img src={Member1} alt="member1" />
+            <p>Alison</p>
+          </div>
+          <div className="story story3">
+            <img src={Member2} alt="member2" />
+            <p>Jackson</p>
+          </div>
+          <div className="story story4">
+            <img src={Member3} alt="member3" />
+            <p>Samona</p>
+          </div>
+          <div className="story story5">
+            <img src={Member4} alt="member4" />
+            <p>John Doe</p>
+          </div>
+        </div>
+        <div className="write-post-container">
+          <div className="user-profile">
+            <img src={ProfileImg} alt="profileImg" />
+            <div>
+              <p>John Nicholson</p>
+              <small>
+                Public <FontAwesomeIcon icon={faCaretDown} />
+              </small>
             </div>
-            <div className="story story2">
-                <img src={Member1} alt="member1" />
-                <p>Alison</p>
+          </div>
+
+          <div className="post-input-container">
+            <textarea
+              rows="3"
+              placeholder="What's on your mind, John?"
+            ></textarea>
+            <div className="add-post-links">
+              <a href="#">
+                <img src={LiveVideo} alt="liveVideo" /> Live Video
+              </a>
+              <a href="#">
+                <img src={Photo} alt="photoVideo" /> Photo/Video
+              </a>
+              <a href="#">
+                <img src={Feeling} alt="feeling" /> Feeling/Activity{" "}
+              </a>
             </div>
-            <div className="story story3">
-                <img src={Member2} alt="member2" />
-                <p>Jackson</p>
-            </div>
-            <div className="story story4">
-                <img src={Member3} alt="member3" />
-                <p>Samona</p>
-            </div>
-            <div className="story story5">
-                <img src={Member4} alt="member4" />
-                <p>John Doe</p>
-            </div>
+          </div>
         </div>
 
+        <div className="post-container">
+          <div className="post-row">
+            <div className="user-profile">
+              <img src={ProfileImg} alt="profileImg" />
+              <div>
+                <p>John Nicholson</p>
+                <span>August 31 2023, 17:59 pm</span>
+              </div>
+            </div>
+            <a href="#">
+              {" "}
+              <FontAwesomeIcon icon={faEllipsisV} />
+            </a>
+          </div>
+          <p className="post-text">
+            Subscribe <span>@Ionutb99 Tutorials</span> to watch more videos on
+            website development and Ui design.{" "}
+            <a href="#">#Ionutb99Tutorials</a> <a href="#"> #YoutubeChannel</a>
+          </p>
+          <img src={FeedImage1} alt="feedImage" className="post-img" />
+
+          <div className="post-row">
+            <div className="activity-icons">
+              <div>
+                <img src={LikeBlueBtn} alt="likeBlue" /> 120
+              </div>
+              <div>
+                <img src={CommentsBtn} alt="likeBlue" /> 45
+              </div>
+              <div>
+                <img src={ShareBtn} alt="likeBlue" /> 20
+              </div>
+            </div>
+            <div className="post-profile-icon">
+              <img src={ProfileImg} alt="profileImg" />
+              <FontAwesomeIcon icon={faCaretDown} />
+            </div>
+          </div>
+        </div>
+        <div className="post-container">
+          <div className="post-row">
+            <div className="user-profile">
+              <img src={ProfileImg} alt="profileImg" />
+              <div>
+                <p>John Nicholson</p>
+                <span>August 31 2023, 17:59 pm</span>
+              </div>
+            </div>
+            <a href="#">
+              {" "}
+              <FontAwesomeIcon icon={faEllipsisV} />
+            </a>
+          </div>
+          <p className="post-text">
+            Subscribe <span>@Ionutb99 Tutorials</span> to watch more videos on
+            website development and Ui design.{" "}
+            <a href="#">#Ionutb99Tutorials</a> <a href="#"> #YoutubeChannel</a>
+          </p>
+          <img src={FeedImage2} alt="feedImage2" className="post-img" />
+
+          <div className="post-row">
+            <div className="activity-icons">
+              <div>
+                <img src={LikeWhiteBtn} alt="likeWhite" /> 157
+              </div>
+              <div>
+                <img src={CommentsBtn} alt="likeBlue" /> 40
+              </div>
+              <div>
+                <img src={ShareBtn} alt="likeBlue" /> 22
+              </div>
+            </div>
+            <div className="post-profile-icon">
+              <img src={ProfileImg} alt="profileImg" />
+              <FontAwesomeIcon icon={faCaretDown} />
+            </div>
+          </div>
+        </div>
+
+{/* 1:54 */}
+
+
+
+
       </div>
-
-
 
       <div className="right-sidebar">
         <div className="sidebar-title">
