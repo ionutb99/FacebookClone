@@ -5,14 +5,6 @@ import {
   faCaretDown,
   faEllipsisV,
 } from "@fortawesome/free-solid-svg-icons";
-import newsImg from "../images/news.png";
-import friendsImg from "../images/friends.png";
-import groupImg from "../images/news.png";
-import marketplaceImg from "../images/marketplace.png";
-import watchImg from "../images/watch.png";
-import LiveVideo from "../images/live-video.png";
-import Photo from "../images/photo.png";
-import Feeling from "../images/feeling.png";
 import Shortcut1 from "../images/shortcut-1.png";
 import Shortcut2 from "../images/shortcut-2.png";
 import Shortcut3 from "../images/shortcut-3.png";
@@ -29,10 +21,8 @@ import FeedImage2 from "../images/feed-image-2.png";
 import FeedImage3 from "../images/feed-image-3.png";
 import FeedImage4 from "../images/feed-image-4.png";
 import FeedImage5 from "../images/feed-image-5.png";
-import LikeBlueBtn from "../images/like-blue.png";
-import LikeWhiteBtn from "../images/like.png";
-import CommentsBtn from "../images/comments.png";
-import ShareBtn from "../images/share.png";
+import { ForumOutlined, ShareOutlined, ThumbUp, LiveTvOutlined, LocalGroceryStore, Groups, Group, Newspaper, VideoCall, PhotoCamera, InsertEmoticonOutlined } from "@mui/icons-material";
+
 
 export const Home = () => {
   return (
@@ -40,19 +30,19 @@ export const Home = () => {
       <div className="left-sidebar">
         <div className="imp-links">
           <a href="#">
-            <img src={newsImg} alt="latest" /> Latest News
+            <Newspaper className="leftSideIcon" /> Latest News
           </a>
           <a href="#">
-            <img src={friendsImg} alt="friends" /> Friends
+            <Group className="leftSideIcon" /> Friends
           </a>
           <a href="#">
-            <img src={groupImg} alt="group" /> Group
+            <Groups className="leftSideIcon" /> Group
           </a>
           <a href="#">
-            <img src={marketplaceImg} alt="marketplace" /> Marketplace
+            <LocalGroceryStore className="leftSideIcon" /> Marketplace
           </a>
           <a href="#">
-            <img src={watchImg} alt="watch" /> Watch
+            <LiveTvOutlined className="leftSideIcon" /> Watch
           </a>
           <a href="#"> See More </a>
         </div>
@@ -114,13 +104,13 @@ export const Home = () => {
             ></textarea>
             <div className="add-post-links">
               <a href="#">
-                <img src={LiveVideo} alt="liveVideo" /> Live Video
+                <VideoCall className="addPostIconLive" /> Live Video
               </a>
               <a href="#">
-                <img src={Photo} alt="photoVideo" /> Photo/Video
+                <PhotoCamera className="addPostIconPhoto" /> Photo/Video
               </a>
               <a href="#">
-                <img src={Feeling} alt="feeling" /> Feeling/Activity{" "}
+                <InsertEmoticonOutlined className="addPostIconFeeling" /> Feeling/Activity{" "}
               </a>
             </div>
           </div>
@@ -150,13 +140,13 @@ export const Home = () => {
           <div className="post-row">
             <div className="activity-icons">
               <div>
-                <img src={LikeBlueBtn} alt="likeBlue" /> 120
+                <ThumbUp className="likeButton" /> 120
               </div>
               <div>
-                <img src={CommentsBtn} alt="likeBlue" /> 45
+                <ForumOutlined className="commentShareBtn" /> 45
               </div>
               <div>
-                <img src={ShareBtn} alt="likeBlue" /> 20
+                <ShareOutlined className="commentShareBtn" /> 20
               </div>
             </div>
             <div className="post-profile-icon">
@@ -189,14 +179,14 @@ export const Home = () => {
 
           <div className="post-row">
             <div className="activity-icons">
-              <div>
-                <img src={LikeWhiteBtn} alt="likeWhite" /> 157
+            <div>
+                <ThumbUp className="likeButton" /> 157
               </div>
               <div>
-                <img src={CommentsBtn} alt="likeBlue" /> 40
+                <ForumOutlined className="commentShareBtn" /> 40
               </div>
               <div>
-                <img src={ShareBtn} alt="likeBlue" /> 22
+                <ShareOutlined className="commentShareBtn" /> 12
               </div>
             </div>
             <div className="post-profile-icon">
@@ -229,14 +219,14 @@ export const Home = () => {
 
           <div className="post-row">
             <div className="activity-icons">
-              <div>
-                <img src={LikeWhiteBtn} alt="likeWhite" /> 157
+            <div>
+                <ThumbUp className="likeButton" /> 120
               </div>
               <div>
-                <img src={CommentsBtn} alt="likeBlue" /> 40
+                <ForumOutlined className="commentShareBtn" /> 45
               </div>
               <div>
-                <img src={ShareBtn} alt="likeBlue" /> 22
+                <ShareOutlined className="commentShareBtn" /> 20
               </div>
             </div>
             <div className="post-profile-icon">
@@ -268,14 +258,14 @@ export const Home = () => {
 
           <div className="post-row">
             <div className="activity-icons">
-              <div>
-                <img src={LikeWhiteBtn} alt="likeWhite" /> 157
+            <div>
+                <ThumbUp className="likeButton" /> 120
               </div>
               <div>
-                <img src={CommentsBtn} alt="likeBlue" /> 40
+                <ForumOutlined className="commentShareBtn" /> 45
               </div>
               <div>
-                <img src={ShareBtn} alt="likeBlue" /> 22
+                <ShareOutlined className="commentShareBtn" /> 20
               </div>
             </div>
             <div className="post-profile-icon">
@@ -307,14 +297,14 @@ export const Home = () => {
 
           <div className="post-row">
             <div className="activity-icons">
-              <div>
-                <img src={LikeWhiteBtn} alt="likeWhite" /> 157
+            <div>
+                <ThumbUp className="likeButton" /> 120
               </div>
               <div>
-                <img src={CommentsBtn} alt="likeBlue" /> 40
+                <ForumOutlined className="commentShareBtn" /> 45
               </div>
               <div>
-                <img src={ShareBtn} alt="likeBlue" /> 22
+                <ShareOutlined className="commentShareBtn" /> 20
               </div>
             </div>
             <div className="post-profile-icon">

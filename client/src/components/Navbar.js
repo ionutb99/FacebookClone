@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import notification from "../images/notification.png";
+import {
+  NotificationsNone,
+  EmailOutlined,
+  OndemandVideoOutlined,
+} from "@mui/icons-material";
 import logo from "../images/logo.png";
-import inbox from "../images/inbox.png";
-import video from "../images/video.png";
 import search from "../images/search.png";
 import userIcon from "../images/profile-pic.png";
 import ProfileImg from "../images/profile-pic.png";
@@ -14,7 +16,7 @@ import DisplayImg from "../images/display.png";
 import LogoutImg from "../images/logout.png";
 import { useNavigate } from "react-router-dom";
 
-export const Navbar = () => {
+export const Navbar = ({ currentUser, setCurrentUser }) => {
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
   const [darkSite, setDarkSite] = useState(false);
 
@@ -37,6 +39,15 @@ export const Navbar = () => {
     localStorage.setItem("darkSitePreference", JSON.stringify(newDarkSite));
   };
 
+  const handleLogout = () => {
+    localStorage.setItem("user", null);
+    setCurrentUser(null);
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 500);
+  };
+
   useEffect(() => {
     if (darkSite) {
       document.body.classList.add("dark-theme");
@@ -45,32 +56,52 @@ export const Navbar = () => {
     }
   }, [darkSite]);
 
+  useEffect(()=> {
+    if (!currentUser) {
+      setIsSettingsMenuOpen(false);
+    }
+  },[currentUser]);
+
   return (
     <nav>
       <div className="nav-left">
-        <img src={logo} alt="logo" className="logo" onClick={() => navigate('/')} />
+        <img
+          src={logo}
+          alt="logo"
+          className="logo"
+          onClick={() => navigate("/")}
+        />
         <ul>
           <li>
-            <img src={notification} alt="notification" />
+            <NotificationsNone />
           </li>
           <li>
-            <img src={inbox} alt="inbox" />
+            <EmailOutlined />
           </li>
           <li>
-            <img src={video} alt="video" />
+            <OndemandVideoOutlined />
           </li>
         </ul>
       </div>
-      <div className="nav-right">
-        <div className="search-box">
-          <img src={search} alt="search" />
-          <input type="text" name="" id="" placeholder="Search" />
-        </div>
+      {currentUser ? (
+        <div className="nav-right">
+          <div className="search-box">
+            <img src={search} alt="search" />
+            <input type="text" name="" id="" placeholder="Search" />
+          </div>
 
-        <div className="nav-user-icon online" onClick={settingsMenuToggle}>
-          <img src={userIcon} alt="" />
+          <div className="nav-user-icon online" onClick={settingsMenuToggle}>
+            <img src={userIcon} alt="" />
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="nav-right">
+          <div className="nav-user-icon">
+            <button type="button" className="btnNavUser" onClick={() => navigate('/login')} >Login</button>
+            <button type="button" className="btnNavUser" onClick={() => navigate('/register')} >Register</button>
+          </div>
+        </div>
+      )}
 
       <div
         className={`settings-menu ${
@@ -123,7 +154,7 @@ export const Navbar = () => {
           </div>
           <div className="setting-links">
             <img src={LogoutImg} alt="logoutImg" className="settings-icon" />
-            <a href="#">
+            <a onClick={handleLogout}>
               Logout <img src={ArrowImg} alt="arrowImg" />
             </a>
           </div>

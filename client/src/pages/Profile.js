@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faLocationDot,
   faCaretDown,
   faEllipsisV,
 } from "@fortawesome/free-solid-svg-icons";
@@ -19,15 +18,11 @@ import Member9 from "../images/member-9.png";
 import AddFriends from "../images/add-friends.png";
 import Message from "../images/message.png";
 import MoreIcon from "../images/more.png";
-import LiveVideo from "../images/live-video.png";
-import Photo from "../images/photo.png";
-import Feeling from "../images/feeling.png";
 import FeedImage1 from "../images/feed-image-1.png";
 import FeedImage2 from "../images/feed-image-2.png";
 import FeedImage3 from "../images/feed-image-3.png";
 import FeedImage4 from "../images/feed-image-4.png";
 import FeedImage5 from "../images/feed-image-5.png";
-import LikeBlueBtn from "../images/like-blue.png";
 import LikeWhiteBtn from "../images/like.png";
 import CommentsBtn from "../images/comments.png";
 import ShareBtn from "../images/share.png";
@@ -42,8 +37,18 @@ import Photo2 from "../images/photo3.png";
 import Photo3 from "../images/photo4.png";
 import Photo4 from "../images/photo5.png";
 import Photo5 from "../images/photo6.png";
+import { ForumOutlined, InsertEmoticonOutlined, MoreHorizOutlined, PhotoCamera, ShareOutlined, ThumbUp, VideoCall } from "@mui/icons-material";
 
-export const Profile = () => {
+export const Profile = ({ currentUser }) => {
+  const [isSettingsIntroOpen, setIsSettingsIntroOpen] = useState(false);
+
+
+  const settingsMenuToggle = () => {
+    setIsSettingsIntroOpen(!isSettingsIntroOpen);
+  };
+
+  console.log(currentUser);
+
   return (
     <div className="profile-container">
       <img src={CoverImg} alt="coverImg" className="cover-img" />
@@ -52,8 +57,8 @@ export const Profile = () => {
           <div className="pd-row">
             <img src={ProfileImg} alt="profileImg" className="pd-image" />
             <div>
-              <h3>Jack Nicholson</h3>
-              <p>122 Friends - 20 mutual</p>
+              <h3>{currentUser.firstName} {currentUser.lastName}</h3>
+              <p>{currentUser.friends.length} Friends - 0 mutual</p>
               <img src={Member1} alt="member1" />
               <img src={Member2} alt="member2" />
               <img src={Member3} alt="member3" />
@@ -80,31 +85,34 @@ export const Profile = () => {
         <div className="info-col">
           <div className="profile-intro">
             <h3>Intro</h3>
+            <MoreHorizOutlined className="edit-intro" onClick={settingsMenuToggle} />
+            <div className={isSettingsIntroOpen ? "intro-settings" : ""}  >
+              {isSettingsIntroOpen && "Edit"}
+            </div>
             <p className="intro-text">
-              Belive in yourself and you can do ubelievable things.{" "}
-              <img src={SmileyFace} alt="smileyFace" />
+             {currentUser.intro}{" "}
             </p>
             <hr />
             <ul>
               <li>
                 <img src={ProfileJob} alt="profileJob" />
-                Director at 99media Ltd
+                {currentUser.profileJob || "~"}
               </li>
               <li>
                 <img src={ProfileStudy} alt="profileStudy" />
-                Studied at Amity University
+                {currentUser.profileStudy || "~"}
               </li>
               <li>
                 <img src={ProfileStudy} alt="profileStudy" />
-                Went to DPS Delhi
+                {currentUser.profileStudyGraduate || "~"}
               </li>
               <li>
                 <img src={ProfileHome} alt="profileHome" />
-                Lives in Bangladore, India
+                {currentUser.profileHome || "~"}
               </li>
               <li>
                 <img src={ProfileLocation} alt="profileLocation" />
-                From Bangladore, India
+                {currentUser.profileLocation || "~"}
               </li>
             </ul>
           </div>
@@ -208,16 +216,16 @@ export const Profile = () => {
                 placeholder="What's on your mind, John?"
               ></textarea>
               <div className="add-post-links">
-                <a href="#">
-                  <img src={LiveVideo} alt="liveVideo" /> Live Video
-                </a>
-                <a href="#">
-                  <img src={Photo} alt="photoVideo" /> Photo/Video
-                </a>
-                <a href="#">
-                  <img src={Feeling} alt="feeling" /> Feeling/Activity{" "}
-                </a>
-              </div>
+              <a href="#">
+                <VideoCall className="addPostIconLive" /> Live Video
+              </a>
+              <a href="#">
+                <PhotoCamera className="addPostIconPhoto" /> Photo/Video
+              </a>
+              <a href="#">
+                <InsertEmoticonOutlined className="addPostIconFeeling" /> Feeling/Activity{" "}
+              </a>
+            </div>
             </div>
           </div>
           <div className="post-container">
@@ -243,17 +251,17 @@ export const Profile = () => {
             <img src={FeedImage1} alt="feedImage" className="post-img" />
 
             <div className="post-row">
-              <div className="activity-icons">
-                <div>
-                  <img src={LikeBlueBtn} alt="likeBlue" /> 120
-                </div>
-                <div>
-                  <img src={CommentsBtn} alt="likeBlue" /> 45
-                </div>
-                <div>
-                  <img src={ShareBtn} alt="likeBlue" /> 20
-                </div>
+            <div className="activity-icons">
+              <div>
+                <ThumbUp className="likeButton" /> 120
               </div>
+              <div>
+                <ForumOutlined className="commentShareBtn" /> 45
+              </div>
+              <div>
+                <ShareOutlined className="commentShareBtn" /> 20
+              </div>
+            </div>
               <div className="post-profile-icon">
                 <img src={ProfileImg} alt="profileImg" />
                 <FontAwesomeIcon icon={faCaretDown} />
@@ -325,17 +333,17 @@ export const Profile = () => {
             <img src={FeedImage3} alt="feedImage3" className="post-img" />
 
             <div className="post-row">
-              <div className="activity-icons">
-                <div>
-                  <img src={LikeWhiteBtn} alt="likeWhite" /> 157
-                </div>
-                <div>
-                  <img src={CommentsBtn} alt="likeBlue" /> 40
-                </div>
-                <div>
-                  <img src={ShareBtn} alt="likeBlue" /> 22
-                </div>
+            <div className="activity-icons">
+              <div>
+                <ThumbUp className="likeButton" /> 120
               </div>
+              <div>
+                <ForumOutlined className="commentShareBtn" /> 45
+              </div>
+              <div>
+                <ShareOutlined className="commentShareBtn" /> 20
+              </div>
+            </div>
               <div className="post-profile-icon">
                 <img src={ProfileImg} alt="profileImg" />
                 <FontAwesomeIcon icon={faCaretDown} />
@@ -365,17 +373,17 @@ export const Profile = () => {
             <img src={FeedImage4} alt="feedImage4" className="post-img" />
 
             <div className="post-row">
-              <div className="activity-icons">
-                <div>
-                  <img src={LikeWhiteBtn} alt="likeWhite" /> 157
-                </div>
-                <div>
-                  <img src={CommentsBtn} alt="likeBlue" /> 40
-                </div>
-                <div>
-                  <img src={ShareBtn} alt="likeBlue" /> 22
-                </div>
+            <div className="activity-icons">
+              <div>
+                <ThumbUp className="likeButton" /> 120
               </div>
+              <div>
+                <ForumOutlined className="commentShareBtn" /> 45
+              </div>
+              <div>
+                <ShareOutlined className="commentShareBtn" /> 20
+              </div>
+            </div>
               <div className="post-profile-icon">
                 <img src={ProfileImg} alt="profileImg" />
                 <FontAwesomeIcon icon={faCaretDown} />
