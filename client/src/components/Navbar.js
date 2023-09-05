@@ -6,8 +6,6 @@ import {
 } from "@mui/icons-material";
 import logo from "../images/logo.png";
 import search from "../images/search.png";
-import userIcon from "../images/profile-pic.png";
-import ProfileImg from "../images/profile-pic.png";
 import FeedbackImg from "../images/feedback.png";
 import SettingsImg from "../images/setting.png";
 import ArrowImg from "../images/arrow.png";
@@ -69,7 +67,7 @@ export const Navbar = ({ currentUser, setCurrentUser }) => {
           src={logo}
           alt="logo"
           className="logo"
-          onClick={() => navigate("/")}
+          onClick={() => {currentUser && navigate("/")}}
         />
         <ul>
           <li>
@@ -91,7 +89,7 @@ export const Navbar = ({ currentUser, setCurrentUser }) => {
           </div>
 
           <div className="nav-user-icon online" onClick={settingsMenuToggle}>
-            <img src={userIcon} alt="" />
+            <img src={currentUser?.profileImage} alt="" />
           </div>
         </div>
       ) : (
@@ -118,9 +116,9 @@ export const Navbar = ({ currentUser, setCurrentUser }) => {
 
         <div className="settings-menu-inner">
           <div className="user-profile">
-            <img src={ProfileImg} alt="profileImg" />
+            <img src={currentUser?.profileImage} alt="profileImg" />
             <div>
-              <p>John Nicholson</p>
+              <p>{currentUser?.firstName + " " + currentUser?.lastName}</p>
               <a href="/profile">See your profile</a>
             </div>
           </div>

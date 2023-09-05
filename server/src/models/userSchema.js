@@ -21,11 +21,11 @@ const userSchema = new mongoose.Schema({
   profileImage: {
     type: String,
     default:
-      "https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180902667/109317646-profile-pic-vector-icon-isolated-on-transparent-background-profile-pic-logo-concept.jpg",
+      "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg",
   },
-  coverPphoto: {
+  coverPhoto: {
     type: String,
-    default: "",
+    default: "https://i.pinimg.com/1200x/d6/94/05/d694055779c0a17614c27f1acc017738.jpg",
   },
   intro: {
     type: String,
@@ -59,6 +59,7 @@ const userSchema = new mongoose.Schema({
     {
       post_id: { type: String },
       text: { type: String },
+      postContent: { type: String },
       timestamp: { type: Date, default: Date.now },
       likes: [
         {
@@ -71,6 +72,11 @@ const userSchema = new mongoose.Schema({
           user_id: { type: String },
           text: { type: String },
           timestamp: { type: Date, default: Date.now },
+        },
+      ],
+      shares: [
+        {
+          user_id: { type: String },
         },
       ],
     },

@@ -54,6 +54,34 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/posts/create/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { text, postContent } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const newPost = {
+      text,
+      postContent,
+    };
+
+
+    user.posts.push(newPost);
+
+    const updatedUser = await user.save();
+
+    res.status(201).json(updatedUser);
+  } catch (error) {
+    console.error("Server error: ", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 router.put("/profile/update-about/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
@@ -90,6 +118,29 @@ router.put("/profile/update-about/:userId", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+router.delete("/posts/delete/:postId", async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+      const user = await User.findOneAndUpdate(
+      { "posts._id": postId },
+      { $pull: { posts: { _id: postId } } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    console.error("Server error: ", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 
 
 module.exports = router;

@@ -304,8 +304,7 @@ nav {
 }
 
 .story1 {
-  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.5)),
-    url(images/status-1.png);
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
 }
 
 .story2 {
@@ -367,18 +366,32 @@ nav {
 }
 
 .post-input-container {
+  position: relative;
   padding-left: 55px;
   padding-top: 20px;
 }
 
-.post-input-container textarea {
+.input-row {
+  display: flex;
+  align-items: center; 
+}
+
+.input-row textarea {
   color: #626262;
-  width: 100%;
+  flex: 1;
+  /* width: 100%; */
   border: 0;
   outline: 0;
   border-bottom: 1px solid #ccc;
   background: transparent;
   resize: none; /* hide extend textarea icon*/
+}
+
+.input-row button {
+  margin-left: 10px; 
+  padding: 5px 5px;
+  font-size: 16px;
+  height: 35px;
 }
 
 .add-post-links {
@@ -410,6 +423,26 @@ nav {
   width: 20px;
   color: green;
   margin-right: 10px;
+}
+
+.photo-video-overlay {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
+  margin-bottom: 0;
+}
+
+.photo-video-overlay button {
+  font-size: 15px;
+}
+
+.photo-video-overlay textarea {
+  width: 88%;
+  border: 0;
+  outline: 0;
+  border-bottom: 1px solid #ccc;
+  background: transparent;
+  resize: none;
 }
 
 .addPostIconFeeling {
@@ -455,9 +488,26 @@ nav {
 }
 
 .post-row {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.post-settings {
+  position: absolute;
+  display: flex;
+  flex-direction:column;
+  top: 30px;
+  right: 0;
+  box-shadow: 0 0 10px rgba(122, 121, 121, 0.2);
+  padding: 0 10px;  
+}
+
+.post-settings span {
+  border-bottom: 1px solid #9a9a9a;
+  padding-bottom: 5px;
+  cursor: pointer;
 }
 
 .activity-icons div img {
@@ -553,12 +603,14 @@ nav {
   display: flex;
   align-items: center;
   margin: 15px 0;
+  cursor: pointer;
 }
 
 .setting-links .settings-icon {
   width: 38px;
   margin-right: 10px;
   border-radius: 50%;
+
 }
 
 .setting-links a {
@@ -779,7 +831,7 @@ nav {
 
 .photo-box div img {
   width: 100%;
-  cursor: pointer;
+  height: 80%;
 }
 
 .profile-intro p {
