@@ -54,4 +54,42 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.put("/profile/update-about/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+   
+    const {
+      firstName,
+      lastName,
+      intro,
+      profileJob,
+      profileStudy,
+      profileStudyGraduate,
+      profileHome,
+      profileLocation,
+    } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        firstName,
+        lastName,
+        intro,
+        profileJob,
+        profileStudy,
+        profileStudyGraduate,
+        profileHome,
+        profileLocation,
+      },
+      { new: true }
+    );
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log("Server error: ", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
 module.exports = router;

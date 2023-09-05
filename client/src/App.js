@@ -7,6 +7,8 @@ import { Profile } from "./pages/Profile";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register.js";
 import { useEffect, useState } from "react";
+import { UpdateProfileInfo } from "./helpers/UpdateProfileInfo";
+
 
 function App() {
   const [currentUser, setCurrentUser] = useState(
@@ -22,6 +24,7 @@ function App() {
         <Route path="/profile" element={<Profile currentUser={currentUser} />} />
         <Route path="/login" element={<Login currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
         <Route path="/register" element={<Register />} />
+        <Route path={`/profile/update-info/${currentUser?._id}`} element={<UpdateProfileInfo currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
       </Routes>
       <Footer />
     </Router>

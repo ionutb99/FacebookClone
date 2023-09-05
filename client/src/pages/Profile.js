@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCaretDown,
@@ -26,7 +26,6 @@ import FeedImage5 from "../images/feed-image-5.png";
 import LikeWhiteBtn from "../images/like.png";
 import CommentsBtn from "../images/comments.png";
 import ShareBtn from "../images/share.png";
-import SmileyFace from "../images/feeling.png";
 import ProfileJob from "../images/profile-job.png";
 import ProfileStudy from "../images/profile-study.png";
 import ProfileHome from "../images/profile-home.png";
@@ -38,10 +37,11 @@ import Photo3 from "../images/photo4.png";
 import Photo4 from "../images/photo5.png";
 import Photo5 from "../images/photo6.png";
 import { ForumOutlined, InsertEmoticonOutlined, MoreHorizOutlined, PhotoCamera, ShareOutlined, ThumbUp, VideoCall } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 export const Profile = ({ currentUser }) => {
   const [isSettingsIntroOpen, setIsSettingsIntroOpen] = useState(false);
-
+  const navigate = useNavigate();
 
   const settingsMenuToggle = () => {
     setIsSettingsIntroOpen(!isSettingsIntroOpen);
@@ -57,8 +57,8 @@ export const Profile = ({ currentUser }) => {
           <div className="pd-row">
             <img src={ProfileImg} alt="profileImg" className="pd-image" />
             <div>
-              <h3>{currentUser.firstName} {currentUser.lastName}</h3>
-              <p>{currentUser.friends.length} Friends - 0 mutual</p>
+              <h3>{currentUser?.firstName} {currentUser?.lastName}</h3>
+              <p>{currentUser?.friends.length} Friends - 0 mutual</p>
               <img src={Member1} alt="member1" />
               <img src={Member2} alt="member2" />
               <img src={Member3} alt="member3" />
@@ -75,9 +75,6 @@ export const Profile = ({ currentUser }) => {
             <img src={Message} alt="message" /> Message
           </button>
           <br />
-          <a href="#">
-            <img src={MoreIcon} alt="more" />
-          </a>
         </div>
       </div>
 
@@ -86,33 +83,33 @@ export const Profile = ({ currentUser }) => {
           <div className="profile-intro">
             <h3>Intro</h3>
             <MoreHorizOutlined className="edit-intro" onClick={settingsMenuToggle} />
-            <div className={isSettingsIntroOpen ? "intro-settings" : ""}  >
+            <div className={isSettingsIntroOpen ? "intro-settings" : ""} onClick={() => navigate(`/profile/update-info/${currentUser._id}`)} >
               {isSettingsIntroOpen && "Edit"}
             </div>
             <p className="intro-text">
-             {currentUser.intro}{" "}
+             {currentUser?.intro}{" "}
             </p>
             <hr />
             <ul>
               <li>
                 <img src={ProfileJob} alt="profileJob" />
-                {currentUser.profileJob || "~"}
+                {currentUser?.profileJob }
               </li>
               <li>
                 <img src={ProfileStudy} alt="profileStudy" />
-                {currentUser.profileStudy || "~"}
+                {currentUser?.profileStudy }
               </li>
               <li>
                 <img src={ProfileStudy} alt="profileStudy" />
-                {currentUser.profileStudyGraduate || "~"}
+                {currentUser?.profileStudyGraduate }
               </li>
               <li>
                 <img src={ProfileHome} alt="profileHome" />
-                {currentUser.profileHome || "~"}
+                {currentUser?.profileHome }
               </li>
               <li>
                 <img src={ProfileLocation} alt="profileLocation" />
-                {currentUser.profileLocation || "~"}
+                {currentUser?.profileLocation }
               </li>
             </ul>
           </div>
