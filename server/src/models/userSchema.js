@@ -21,11 +21,11 @@ const userSchema = new mongoose.Schema({
   profileImage: {
     type: String,
     default:
-      "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg",
+      "profile-default.jpg",
   },
   coverPhoto: {
     type: String,
-    default: "https://i.pinimg.com/1200x/d6/94/05/d694055779c0a17614c27f1acc017738.jpg",
+    default: "cover-default.jpg",
   },
   intro: {
     type: String,

@@ -78,7 +78,7 @@ export const Home = ({ currentUser }) => {
 
           <div className="main-content">
             <div className="story-gallery">
-              <div className="story story1" style={{backgroundImage:`url(${currentUser?.profileImage})`}}>
+              <div className="story story1" style={{backgroundImage:`url(../images/${currentUser?.profileImage})`}}>
                 <img src={UploadImg1} alt="uploadImg1" />
                 <p>Post Story</p>
               </div>
@@ -101,7 +101,7 @@ export const Home = ({ currentUser }) => {
             </div>
             <div className="write-post-container">
               <div className="user-profile">
-                <img src={currentUser?.profileImage} alt="profileImg" />
+                <img src={`../images/${currentUser?.profileImage}`} alt="profileImg" />
                 <div>
                   <p>{currentUser?.firstName +" " + currentUser?.lastName}</p>
                   <small>

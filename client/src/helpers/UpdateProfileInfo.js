@@ -143,3 +143,7 @@ export const UpdateProfileInfo = ({ currentUser, setCurrentUser }) => {
     </div>
   );
 };
+
+
+
+

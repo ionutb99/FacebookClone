@@ -10,15 +10,14 @@ import ProfileJob from "../images/profile-job.png";
 import ProfileStudy from "../images/profile-study.png";
 import ProfileHome from "../images/profile-home.png";
 import ProfileLocation from "../images/profile-location.png";
-import Photo1 from "../images/photo1.png";
-import Photo2 from "../images/photo3.png";
-import Photo3 from "../images/photo4.png";
 
 import {
   ForumOutlined,
   InsertEmoticonOutlined,
+  MoreHoriz,
   MoreHorizOutlined,
   PhotoCamera,
+  Settings,
   ShareOutlined,
   ThumbUp,
   VideoCall,
@@ -31,7 +30,7 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
   const [postText, setPostText] = useState("");
   const [photoVideoContent, setPhotoVideoContent] = useState("");
   const [isPhotoVideoOverlayOpen, setIsPhotoVideoOverlayOpen] = useState(false);
-  const [postSettings, setPostSettings] = useState(false);
+  const [activePostId, setActivePostId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -39,8 +38,8 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
     setIsSettingsIntroOpen(!isSettingsIntroOpen);
   };
 
-  const handlePostSettings = () => {
-    setPostSettings(!postSettings);
+  const handlePostSettings = (postId) => {
+    setActivePostId(postId === activePostId ? null : postId);
   };
 
   const handleDeletePost = async (postId) => {
@@ -117,14 +116,18 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
 
   return (
     <div className="profile-container">
-      <img src={currentUser?.coverPhoto} alt="coverImg" className="cover-img" />
+      <img src={`../images/${currentUser?.coverPhoto}`} alt="coverImg" className="cover-img" />
       <div className="profile-details">
         <div className="pd-left">
           <div className="pd-row">
             <img
-              src={currentUser?.profileImage}
+              src={`../images/${currentUser?.profileImage}`}
               alt="profileImage"
               className="pd-image"
+            />
+            <Settings
+              className="edit-photo-cover"
+              onClick={() => navigate(`/photos/update/${currentUser._id}`)}
             />
             <div>
               <h3>
@@ -196,8 +199,8 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
             </div>
 
             <div className="photo-box">
-              {currentUser?.posts.map((post) => (
-                <div>
+              {currentUser?.posts.map((post, idx) => (
+                <div key={idx}>
                   <img src={post?.postContent} alt="photoContent" />
                 </div>
               ))}
@@ -233,7 +236,7 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
         <div className="post-col">
           <div className="write-post-container">
             <div className="user-profile">
-              <img src={currentUser?.profileImage} alt="profileImg" />
+              <img src={`../images/${currentUser?.profileImage}`} alt="profileImg" />
               <div>
                 <p>{currentUser?.firstName + " " + currentUser?.lastName}</p>
                 <small>
@@ -282,7 +285,7 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
             <div className="post-container" key={idx}>
               <div className="post-row">
                 <div className="user-profile">
-                  <img src={currentUser?.profileImage} alt="profileImg" />
+                  <img src={`../images/${currentUser?.profileImage}`} alt="profileImg" />
                   <div>
                     <p>
                       {currentUser?.firstName + " " + currentUser?.lastName}
@@ -294,10 +297,10 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
                   {" "}
                   <FontAwesomeIcon
                     icon={faEllipsisV}
-                    onClick={handlePostSettings}
+                    onClick={() => handlePostSettings(post._id)}
                   />
                 </a>
-                {postSettings && (
+                {activePostId === post._id && (
                   <div className="post-settings">
                     <span>Edit</span>
                     <span onClick={() => handleDeletePost(post._id)}>
@@ -328,7 +331,7 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
                   </div>
                 </div>
                 <div className="post-profile-icon">
-                  <img src={currentUser?.profileImage} alt="profileImg" />
+                  <img src={`../images/${currentUser?.profileImage}`} alt="profileImg" />
                   <FontAwesomeIcon icon={faCaretDown} />
                 </div>
               </div>

@@ -2,6 +2,25 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/userSchema");
 const bcrypt = require("bcrypt");
+const multer = require('multer');
+const path = require('path');
+
+
+
+router.use(express.json());
+
+// Set up Multer for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "../client/public/images"); 
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + file.originalname); 
+  },
+});
+
+const upload = multer({ storage: storage });
+
 
 router.get("/", async (req, res) => {
   try {
@@ -118,6 +137,35 @@ router.put("/profile/update-about/:userId", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+router.put("/photos/update/:userId", upload.fields([{ name: "profileImage", maxCount: 1 }, { name: "coverPhoto", maxCount: 1 }]), async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (req.files["profileImage"]) {
+      user.profileImage = `${req.files["profileImage"][0].filename}`;
+    }
+    if (req.files["coverPhoto"]) {
+      user.coverPhoto = `${req.files["coverPhoto"][0].filename}`;
+    }
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      profileImage: updatedUser.profileImage,
+      coverPhoto: updatedUser.coverPhoto,
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 
 router.delete("/posts/delete/:postId", async (req, res) => {
   try {

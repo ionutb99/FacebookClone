@@ -89,7 +89,7 @@ export const Navbar = ({ currentUser, setCurrentUser }) => {
           </div>
 
           <div className="nav-user-icon online" onClick={settingsMenuToggle}>
-            <img src={currentUser?.profileImage} alt="" />
+            <img src={`../images/${currentUser?.profileImage}`} alt="" className="profile-photo-nav" />
           </div>
         </div>
       ) : (
@@ -116,7 +116,7 @@ export const Navbar = ({ currentUser, setCurrentUser }) => {
 
         <div className="settings-menu-inner">
           <div className="user-profile">
-            <img src={currentUser?.profileImage} alt="profileImg" />
+            <img src={`../images/${currentUser?.profileImage}`} alt="profileImg" />
             <div>
               <p>{currentUser?.firstName + " " + currentUser?.lastName}</p>
               <a href="/profile">See your profile</a>

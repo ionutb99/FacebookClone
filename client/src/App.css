@@ -69,12 +69,14 @@ nav {
 
 .nav-user-icon img {
   width: 40px;
+  height: 50px;
   border-radius: 50%;
   cursor: pointer;
 }
 
 .nav-user-icon {
   margin-left: 30px;
+  margin-top: 5px;
 }
 
 .online {
@@ -351,9 +353,12 @@ nav {
 
 .user-profile img {
   width: 45px;
+  height: 55px;
   border-radius: 50%;
   margin-right: 10px;
 }
+
+
 
 .user-profile p {
   margin-bottom: -5px;
@@ -500,8 +505,10 @@ nav {
   flex-direction:column;
   top: 30px;
   right: 0;
-  box-shadow: 0 0 10px rgba(122, 121, 121, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(122, 121, 121, 1);
   padding: 0 10px;  
+  background:#626262;
 }
 
 .post-settings span {
@@ -538,6 +545,7 @@ nav {
 
 .post-profile-icon img {
   width: 25px;
+  height: 30px;
   border-radius: 50%;
   margin-right: 5px;
 }
@@ -657,6 +665,7 @@ nav {
 
 .cover-img {
   width: 100%;
+  max-height: 500px;
   border-radius: 6px;
   margin-bottom: 14px;
 }
@@ -671,8 +680,17 @@ nav {
 }
 
 .pd-row {
+  position: relative;
   display: flex;
   align-items: flex-start;
+}
+
+
+.edit-photo-cover {
+  position: absolute;
+  bottom: 0px;
+  left: 75px;
+  cursor: pointer;
 }
 
 .pd-row div h3 {
@@ -691,7 +709,8 @@ nav {
 }
 
 .pd-image {
-  width: 100px;
+  width: 85px;
+  height: 95px;
   margin-right: 20px;
   border-radius: 6px;
 }
