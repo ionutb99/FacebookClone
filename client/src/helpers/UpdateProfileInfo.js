@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 export const UpdateProfileInfo = ({ currentUser, setCurrentUser }) => {
   const [updatedProfile, setUpdatedProfile] = useState({
-    firstName: currentUser.firstName || "",
-    lastName: currentUser.lastName || "",
     intro: currentUser.intro || "",
     profileJob: currentUser.profileJob || "",
     profileStudy: currentUser.profileStudy || "",
@@ -29,8 +27,6 @@ export const UpdateProfileInfo = ({ currentUser, setCurrentUser }) => {
       const userId = currentUser._id;
 
       const response = await axios.put(`/api/profile/update-about/${userId}`, {
-        firstName: updatedProfile.firstName,
-        lastName: updatedProfile.lastName,
         intro: updatedProfile.intro,
         profileJob: updatedProfile.profileJob,
         profileStudy: updatedProfile.profileStudy,
@@ -43,8 +39,6 @@ export const UpdateProfileInfo = ({ currentUser, setCurrentUser }) => {
 
       setCurrentUser({
         ...currentUser,
-        firstName: updatedProfile.firstName,
-        lastName: updatedProfile.lastName,
         intro: updatedProfile.intro,
         profileJob: updatedProfile.profileJob,
         profileStudy: updatedProfile.profileStudy,
@@ -57,8 +51,6 @@ export const UpdateProfileInfo = ({ currentUser, setCurrentUser }) => {
         "user",
         JSON.stringify({
           ...currentUser,
-          firstName: updatedProfile.firstName,
-          lastName: updatedProfile.lastName,
           intro: updatedProfile.intro,
           profileJob: updatedProfile.profileJob,
           profileStudy: updatedProfile.profileStudy,
@@ -77,20 +69,6 @@ export const UpdateProfileInfo = ({ currentUser, setCurrentUser }) => {
   return (
     <div className="update-profile-info-div">
       <h2>Profile Update</h2>
-      <input
-        type="text"
-        placeholder="First Name"
-        name="firstName"
-        value={updatedProfile.firstName}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        placeholder="Last Name"
-        name="lastName"
-        value={updatedProfile.lastName}
-        onChange={handleChange}
-      />
       <input
         type="text"
         placeholder="Intro"

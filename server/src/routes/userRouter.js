@@ -2,25 +2,22 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/userSchema");
 const bcrypt = require("bcrypt");
-const multer = require('multer');
-const path = require('path');
-
-
+const multer = require("multer");
+const path = require("path");
 
 router.use(express.json());
 
 // Set up Multer for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "../client/public/images"); 
+    cb(null, "../client/public/images");
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname); 
+    cb(null, Date.now() + file.originalname);
   },
 });
 
 const upload = multer({ storage: storage });
-
 
 router.get("/", async (req, res) => {
   try {
@@ -73,10 +70,11 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/posts/create/:userId", async (req, res) => {
+router.post("/posts/create/:userId", upload.single("postContent"), async (req, res) => {
   try {
     const { userId } = req.params;
-    const { text, postContent } = req.body;
+    const { text } = req.body;
+    const postContentPath = req.file.path; 
 
     const user = await User.findById(userId);
 
@@ -84,11 +82,12 @@ router.post("/posts/create/:userId", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    const postContentFileName = path.basename(postContentPath);
+
     const newPost = {
       text,
-      postContent,
+      postContent: postContentFileName, 
     };
-
 
     user.posts.push(newPost);
 
@@ -104,10 +103,8 @@ router.post("/posts/create/:userId", async (req, res) => {
 router.put("/profile/update-about/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-   
+
     const {
-      firstName,
-      lastName,
       intro,
       profileJob,
       profileStudy,
@@ -119,8 +116,6 @@ router.put("/profile/update-about/:userId", async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
-        firstName,
-        lastName,
         intro,
         profileJob,
         profileStudy,
@@ -138,40 +133,52 @@ router.put("/profile/update-about/:userId", async (req, res) => {
   }
 });
 
-router.put("/photos/update/:userId", upload.fields([{ name: "profileImage", maxCount: 1 }, { name: "coverPhoto", maxCount: 1 }]), async (req, res) => {
-  try {
-    const { userId } = req.params;
+router.put(
+  "/photos/update/:userId",
+  upload.fields([
+    { name: "profileImage", maxCount: 1 },
+    { name: "coverPhoto", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    try {
+      const { userId } = req.params;
 
-    const user = await User.findById(userId);
+      const user = await User.findById(userId);
 
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      if (req.files["profileImage"]) {
+        user.profileImage = `${req.files["profileImage"][0].filename}`;
+      }
+      if (req.files["coverPhoto"]) {
+        user.coverPhoto = `${req.files["coverPhoto"][0].filename}`;
+      }
+
+      user.firstName = req.body.firstName;
+      user.lastName = req.body.lastName;
+
+      const updatedUser = await user.save();
+
+      res.status(200).json({
+        profileImage: updatedUser.profileImage,
+        coverPhoto: updatedUser.coverPhoto,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+      });
+    } catch (error) {
+      console.error("Server error:", error);
+      res.status(500).json({ error: "Server error" });
     }
-
-    if (req.files["profileImage"]) {
-      user.profileImage = `${req.files["profileImage"][0].filename}`;
-    }
-    if (req.files["coverPhoto"]) {
-      user.coverPhoto = `${req.files["coverPhoto"][0].filename}`;
-    }
-    const updatedUser = await user.save();
-
-    res.status(200).json({
-      profileImage: updatedUser.profileImage,
-      coverPhoto: updatedUser.coverPhoto,
-    });
-  } catch (error) {
-    console.error("Server error:", error);
-    res.status(500).json({ error: "Server error" });
   }
-});
-
+);
 
 router.delete("/posts/delete/:postId", async (req, res) => {
   try {
     const { postId } = req.params;
 
-      const user = await User.findOneAndUpdate(
+    const user = await User.findOneAndUpdate(
       { "posts._id": postId },
       { $pull: { posts: { _id: postId } } },
       { new: true }
@@ -181,14 +188,11 @@ router.delete("/posts/delete/:postId", async (req, res) => {
       return res.status(404).json({ error: "Post not found" });
     }
 
-
     res.status(200).json({ message: "Post deleted successfully" });
   } catch (error) {
     console.error("Server error: ", error);
     res.status(500).json({ error: "Server error" });
   }
 });
-
-
 
 module.exports = router;

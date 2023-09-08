@@ -5,6 +5,8 @@ import axios from "axios";
 export const EditPhotos = ({ currentUser, setCurrentUser }) => {
   const [profileImage, setProfileImage] = useState(null);
   const [coverPhoto, setCoverPhoto] = useState(null);
+  const [firstName, setFirstName] = useState(currentUser.firstName || "");
+  const [lastName, setLastName] = useState(currentUser.lastName || "");
 
   const navigate = useNavigate();
 
@@ -21,6 +23,8 @@ export const EditPhotos = ({ currentUser, setCurrentUser }) => {
       const formData = new FormData();
       formData.append("profileImage", profileImage);
       formData.append("coverPhoto", coverPhoto);
+      formData.append("firstName", firstName); // Add firstName
+      formData.append("lastName", lastName);   // Add lastName
 
       const response = await axios.put(`/api/photos/update/${currentUser._id}`, formData, {
         headers: {
@@ -34,6 +38,8 @@ export const EditPhotos = ({ currentUser, setCurrentUser }) => {
         ...currentUser,
         profileImage: response.data.profileImage,
         coverPhoto: response.data.coverPhoto,
+        firstName,
+        lastName,
       };
 
       setCurrentUser(updatedUser);
@@ -48,7 +54,25 @@ export const EditPhotos = ({ currentUser, setCurrentUser }) => {
 
   return (
     <div className="edit-photos-container">
-      <h2>Edit Photos</h2>
+      <h2>Edit Name and Photos</h2>
+      <div>
+        <label htmlFor="firstName">First Name:</label>
+        <input
+          type="text"
+          id="firstName"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="lastName">Last Name:</label>
+        <input
+          type="text"
+          id="lastName"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
+      </div>
       <div>
         <label htmlFor="profileImage">Profile Image:</label>
         <input

@@ -4,20 +4,18 @@ import { faCaretDown, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import Member1 from "../images/member-1.png";
 import Member2 from "../images/member-2.png";
 import Member3 from "../images/member-3.png";
-import AddFriends from "../images/add-friends.png";
-import Message from "../images/message.png";
 import ProfileJob from "../images/profile-job.png";
 import ProfileStudy from "../images/profile-study.png";
 import ProfileHome from "../images/profile-home.png";
 import ProfileLocation from "../images/profile-location.png";
 
 import {
+  Add,
   ForumOutlined,
   InsertEmoticonOutlined,
   MoreHoriz,
   MoreHorizOutlined,
   PhotoCamera,
-  Settings,
   ShareOutlined,
   ThumbUp,
   VideoCall,
@@ -27,8 +25,9 @@ import axios from "axios";
 
 export const Profile = ({ currentUser, setCurrentUser }) => {
   const [isSettingsIntroOpen, setIsSettingsIntroOpen] = useState(false);
+  const [isSettingsProfileOpen, setIsSettingsProfileOpen] = useState(false);
   const [postText, setPostText] = useState("");
-  const [photoVideoContent, setPhotoVideoContent] = useState("");
+  const [photoVideoContent, setPhotoVideoContent] = useState(null);
   const [isPhotoVideoOverlayOpen, setIsPhotoVideoOverlayOpen] = useState(false);
   const [activePostId, setActivePostId] = useState(null);
 
@@ -36,6 +35,9 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
 
   const settingsMenuToggle = () => {
     setIsSettingsIntroOpen(!isSettingsIntroOpen);
+  };
+  const settingsProfileToggle = () => {
+    setIsSettingsProfileOpen(!isSettingsProfileOpen);
   };
 
   const handlePostSettings = (postId) => {
@@ -72,43 +74,52 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
 
   const handlePost = async () => {
     try {
+
+      console.log("postText:", postText);
+      console.log("photoVideoContent:", photoVideoContent);
+    
+      const formData = new FormData();
+      formData.append("text", postText);
+      formData.append("postContent", photoVideoContent);
+  
       const response = await axios.post(
         `/api/posts/create/${currentUser?._id}`,
+        formData,
         {
-          text: postText,
-          postContent: photoVideoContent,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
+  
       const newPost = response.data.posts[response.data.posts.length - 1];
-      console.log(newPost);
       const updatedPosts = [...currentUser.posts, newPost];
+  
       setCurrentUser({
         ...currentUser,
         posts: updatedPosts,
       });
-
+  
       const updatedUser = {
         ...currentUser,
         posts: updatedPosts,
       };
       localStorage.setItem("user", JSON.stringify(updatedUser));
-
+  
       setPostText("");
-      setPhotoVideoContent("");
+      setPhotoVideoContent(null);
     } catch (error) {
-      console.error("Error creating post: ", error);
+      console.error("Error creating post: ", error.response?.data || error.message);
     }
   };
+  
 
   const togglePhotoVideoOverlay = () => {
     setIsPhotoVideoOverlayOpen(!isPhotoVideoOverlayOpen);
   };
 
   const handleSavePhotoVideoContent = () => {
-    // Handle saving the photo/video content
     console.log("Photo/Video content:", photoVideoContent);
-
-    // Close the overlay
     setIsPhotoVideoOverlayOpen(false);
   };
 
@@ -116,7 +127,11 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
 
   return (
     <div className="profile-container">
-      <img src={`../images/${currentUser?.coverPhoto}`} alt="coverImg" className="cover-img" />
+      <img
+        src={`../images/${currentUser?.coverPhoto}`}
+        alt="coverImg"
+        className="cover-img"
+      />
       <div className="profile-details">
         <div className="pd-left">
           <div className="pd-row">
@@ -125,15 +140,12 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
               alt="profileImage"
               className="pd-image"
             />
-            <Settings
-              className="edit-photo-cover"
-              onClick={() => navigate(`/photos/update/${currentUser._id}`)}
-            />
+
             <div>
               <h3>
                 {currentUser?.firstName} {currentUser?.lastName}
               </h3>
-              <p>{currentUser?.friends.length} Friends - 0 mutual</p>
+              <p>{currentUser?.friends.length} Friends</p>
               <img src={Member1} alt="member1" />
             </div>
           </div>
@@ -141,12 +153,20 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
 
         <div className="pd-right">
           <button type="button">
-            <img src={AddFriends} alt="addFriends" /> Friend
+            <Add /> <b>Add to story</b>
           </button>
-          <button type="button">
-            <img src={Message} alt="message" /> Message
-          </button>
+
           <br />
+          <MoreHoriz
+            className="edit-photo-cover"
+            onClick={settingsProfileToggle}
+          />
+          <div
+            className={isSettingsProfileOpen ? "profile-settings" : ""}
+            onClick={() => navigate(`/photos/update/${currentUser._id}`)}
+          >
+            {isSettingsProfileOpen && "Edit"}
+          </div>
         </div>
       </div>
 
@@ -201,7 +221,7 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
             <div className="photo-box">
               {currentUser?.posts.map((post, idx) => (
                 <div key={idx}>
-                  <img src={post?.postContent} alt="photoContent" />
+                  <img src={`../images/${post?.postContent}`} alt="photoContent" />
                 </div>
               ))}
             </div>
@@ -236,7 +256,10 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
         <div className="post-col">
           <div className="write-post-container">
             <div className="user-profile">
-              <img src={`../images/${currentUser?.profileImage}`} alt="profileImg" />
+              <img
+                src={`../images/${currentUser?.profileImage}`}
+                alt="profileImg"
+              />
               <div>
                 <p>{currentUser?.firstName + " " + currentUser?.lastName}</p>
                 <small>
@@ -269,12 +292,12 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
               </div>
               {isPhotoVideoOverlayOpen && (
                 <div className="photo-video-overlay">
-                  <textarea
-                    rows="1"
-                    placeholder="Enter Photo/Video URL here"
-                    value={photoVideoContent}
-                    onChange={(e) => setPhotoVideoContent(e.target.value)}
-                  ></textarea>
+                  <input
+                    type="file"
+                    accept="image/*, video/*"
+                    name="postContent"
+                    onChange={(e) => setPhotoVideoContent(e.target.files[0])}
+                  />
                   <button onClick={handleSavePhotoVideoContent}>Save</button>
                 </div>
               )}
@@ -285,7 +308,10 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
             <div className="post-container" key={idx}>
               <div className="post-row">
                 <div className="user-profile">
-                  <img src={`../images/${currentUser?.profileImage}`} alt="profileImg" />
+                  <img
+                    src={`../images/${currentUser?.profileImage}`}
+                    alt="profileImg"
+                  />
                   <div>
                     <p>
                       {currentUser?.firstName + " " + currentUser?.lastName}
@@ -311,7 +337,7 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
               </div>
               <p className="post-text">{post?.text}</p>
               <img
-                src={post?.postContent}
+                src={`../images/${post?.postContent}`}
                 alt="feedImage"
                 className="post-img"
               />
@@ -331,7 +357,10 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
                   </div>
                 </div>
                 <div className="post-profile-icon">
-                  <img src={`../images/${currentUser?.profileImage}`} alt="profileImg" />
+                  <img
+                    src={`../images/${currentUser?.profileImage}`}
+                    alt="profileImg"
+                  />
                   <FontAwesomeIcon icon={faCaretDown} />
                 </div>
               </div>

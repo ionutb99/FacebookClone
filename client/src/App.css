@@ -680,18 +680,10 @@ nav {
 }
 
 .pd-row {
-  position: relative;
   display: flex;
   align-items: flex-start;
 }
 
-
-.edit-photo-cover {
-  position: absolute;
-  bottom: 0px;
-  left: 75px;
-  cursor: pointer;
-}
 
 .pd-row div h3 {
   font-size: 25px;
@@ -740,6 +732,7 @@ nav {
 
 .pd-right {
   text-align: right;
+  position: relative;
 }
 
 .pd-right a {
@@ -754,12 +747,20 @@ nav {
   width: 20px;
 }
 
+.edit-photo-cover {
+  position: absolute;
+  right: 10px;
+  top: 70px;
+  cursor: pointer;
+}
+
 .profile-info {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   margin-top: 20px;
 }
+
 
 .info-col {
   flex-basis: 33%;
@@ -790,11 +791,34 @@ nav {
 
 .intro-settings {
   position: absolute;
-  right: 20px;
-  top: 40px;
-  padding: 2px 5px;
+  right: 10px;
+  top: 43px;
+  padding: 2px 10px;
   box-shadow: 0 0 10px ;
   cursor: pointer;
+  transition: 0.3s;
+
+}
+
+.intro-settings:hover {
+  color: #1876f2;
+  transition: 0.3s;
+}
+
+.profile-settings {
+  position: absolute;
+  right: 0px;
+  top: 90px;
+  padding: 2px 10px;
+  box-shadow: 0 0 10px ;
+  cursor: pointer;
+  transition: 0.3s;
+
+}
+
+.profile-settings:hover {
+  color: #1876f2;
+  transition: 0.3s;
 }
 
 
@@ -849,8 +873,8 @@ nav {
 }
 
 .photo-box div img {
-  width: 100%;
-  height: 80%;
+  width: 70px;
+  height: 70px;
 }
 
 .profile-intro p {
@@ -865,6 +889,12 @@ nav {
 }
 
 .friend-box div img {
+  width: 100%;
+  cursor: pointer;
+  padding-bottom: 20px;
+}
+
+.friend-box img {
   width: 100%;
   cursor: pointer;
   padding-bottom: 20px;
