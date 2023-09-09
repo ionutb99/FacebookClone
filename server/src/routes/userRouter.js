@@ -116,6 +116,87 @@ router.post("/posts/create/:userId", upload.single("postContent"), async (req, r
   }
 });
 
+router.post("/add-friend/:currentUserId/:friendId", async (req, res) => {
+  try {
+    const { friendId, currentUserId } = req.params;
+
+    const currentUser = await User.findById(currentUserId);
+    const friend = await User.findById(friendId);
+
+    if (!currentUser || !friend) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const existingFriend = friend.friends.find((f) => f.user_id === currentUserId);
+
+    if (existingFriend) {
+      return res.status(400).json({ error: "Friend already added" });
+    }
+
+  friend.friends.push({ user_id: currentUserId, friendship_status: "request" });
+  currentUser.friends.push({ user_id: friendId, friendship_status: "pending" });
+
+  const updatedFriend = await friend.save();
+  const updatedCurrentUser = await currentUser.save();
+
+
+  res.status(200).json({ updatedFriend, updatedCurrentUser });
+  } catch (error) {
+    console.error("Error adding friend:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Accept friend request
+router.post("/accept-friend-request/:currentUserId/:friendId", async (req, res) => {
+  try {
+    const { friendId, currentUserId } = req.params;
+
+    const currentUser = await User.findById(currentUserId);
+    const friend = await User.findById(friendId);
+
+    if (!currentUser || !friend) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    friend.friends.find((f) => f.user_id === currentUserId).friendship_status = "friends";
+    currentUser.friends.find((f) => f.user_id === friendId).friendship_status = "friends";
+
+    const updatedFriend = await friend.save();
+    const updatedCurrentUser = await currentUser.save();
+
+    res.status(200).json({ updatedFriend, updatedCurrentUser });
+  } catch (error) {
+    console.error("Error accepting friend request:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Decline friend request
+router.post("/decline-friend-request/:currentUserId/:friendId", async (req, res) => {
+  try {
+    const { friendId, currentUserId } = req.params;
+
+    const currentUser = await User.findById(currentUserId);
+    const friend = await User.findById(friendId);
+
+    if (!currentUser || !friend) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    friend.friends = friend.friends.filter((f) => f.user_id !== currentUserId);
+    currentUser.friends = currentUser.friends.filter((f) => f.user_id !== friendId);
+
+    const updatedFriend = await friend.save();
+    const updatedCurrentUser = await currentUser.save();
+
+    res.status(200).json({ updatedFriend, updatedCurrentUser });
+  } catch (error) {
+    console.error("Error declining friend request:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 router.put("/profile/update-about/:userId", async (req, res) => {
   try {
     const { userId } = req.params;

@@ -80,7 +80,9 @@ export const EditPhotos = ({ currentUser, setCurrentUser }) => {
           />
         </div>
         <div>
-          <label htmlFor="profileImage"  className="custom-file-upload" >Profile Image: <AttachFile /></label>
+          <label htmlFor="profileImage" className="custom-file-upload">
+            Profile Image: <AttachFile />
+          </label>
           <input
             type="file"
             id="profileImage"
@@ -89,7 +91,9 @@ export const EditPhotos = ({ currentUser, setCurrentUser }) => {
           />
         </div>
         <div>
-          <label htmlFor="coverPhoto" className="custom-file-upload">Cover Photo: <AttachFile /> </label>
+          <label htmlFor="coverPhoto" className="custom-file-upload">
+            Cover Photo: <AttachFile />{" "}
+          </label>
           <input
             type="file"
             id="coverPhoto"

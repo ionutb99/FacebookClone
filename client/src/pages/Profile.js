@@ -11,6 +11,7 @@ import ProfileLocation from "../images/profile-location.png";
 
 import {
   Add,
+  AttachFile,
   ForumOutlined,
   InsertEmoticonOutlined,
   MoreHoriz,
@@ -78,7 +79,7 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
         console.error("Post text and photo/video content cannot be empty.");
         return;
       }
-      
+
       const formData = new FormData();
       formData.append("text", postText);
       formData.append("postContent", photoVideoContent);
@@ -149,7 +150,7 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
                 {currentUser?.firstName} {currentUser?.lastName}
               </h3>
               <p>{currentUser?.friends.length} Friends</p>
-              <img src={Member1} alt="member1" />
+              {/* <img src={} alt="member1" /> */}
             </div>
           </div>
         </div>
@@ -236,11 +237,11 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
           <div className="profile-intro">
             <div className="title-box">
               <h3>Friends</h3>
-              <a href="#">All Friends</a>
+              <a >All Friends</a>
             </div>
             <p>
               {currentUser?.friends.length} (
-              {currentUser?.friends.length / Math.random()} mutual)
+              { Math.round(currentUser?.friends.length - 1)} mutual)
             </p>
 
             <div className="friend-box">
@@ -298,12 +299,20 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
               </div>
               {isPhotoVideoOverlayOpen && (
                 <div className="photo-video-overlay">
-                  <input
-                    type="file"
-                    accept="image/*, video/*"
-                    name="postContent"
-                    onChange={(e) => setPhotoVideoContent(e.target.files[0])}
-                  />
+                  <div>
+                    <label
+                      htmlFor="postContent"
+                      className="custom-file-upload"
+                    >Choose Post: <AttachFile /></label>
+                    <input
+                      type="file"
+                      style={{display:"none"}}
+                      id="postContent"
+                      accept="image/*, video/*"
+                      name="postContent"
+                      onChange={(e) => setPhotoVideoContent(e.target.files[0])}
+                    />
+                  </div>
                   <button onClick={handleSavePhotoVideoContent}>Save</button>
                 </div>
               )}

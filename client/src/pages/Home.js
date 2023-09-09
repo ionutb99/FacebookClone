@@ -36,6 +36,8 @@ import {
   PersonAdd,
   ArrowCircleRightOutlined,
   ArrowCircleLeftOutlined,
+  Close,
+  DoneOutline,
 } from "@mui/icons-material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -90,11 +92,120 @@ export const Home = ({ currentUser, setFriendId }) => {
   const profileImageClicked = (personId) => {
     setFriendId(personId);
     if (currentUser._id === personId) {
-      navigate(`/profile`);  
+      navigate(`/profile`);
     } else {
       navigate(`/user/${personId}`);
     }
   };
+
+  const addFriendHandle = async (personId) => {
+    try {
+      setFriendId(personId);
+
+      const updatedCurrentUser = {
+        ...currentUser,
+        friends: [
+          ...currentUser.friends,
+          {
+            user_id: personId,
+            friendship_status: "pending",
+          },
+        ],
+      };
+
+      localStorage.setItem("user", JSON.stringify(updatedCurrentUser));
+
+      const updatedUsers = users.map((person) => {
+        if (person._id === personId) {
+          return {
+            ...person,
+            friendship_status: "pending",
+          };
+        } else if (person._id === currentUser._id) {
+          // Update the currentUser's friends list
+          return {
+            ...person,
+            friends: [
+              ...person.friends,
+              {
+                user_id: personId,
+                friendship_status: "pending",
+              },
+            ],
+          };
+        }
+        return person;
+      });
+
+      setUsers(updatedUsers);
+
+      await axios.post(`/api/add-friend/${currentUser._id}/${personId}`);
+    } catch (error) {
+      console.error("Error adding friend: ", error);
+    }
+  };
+
+const handleFriendRequest = async (personId, acceptRequest) => {
+  try {
+    setFriendId(personId);
+
+    const updatedCurrentUser = {
+      ...currentUser,
+      friends: currentUser.friends.map((friend) => {
+        if (friend.user_id === personId) {
+          return {
+            ...friend,
+            friendship_status: acceptRequest ? "friends" : "declined",
+          };
+        }
+        return friend;
+      }),
+    };
+
+    localStorage.setItem("user", JSON.stringify(updatedCurrentUser));
+
+    const updatedUsers = users.map((person) => {
+      if (person._id === personId) {
+        return {
+          ...person,
+          friendship_status: acceptRequest ? "friends" : "declined",
+        };
+      } else if (person._id === currentUser._id) {
+        return {
+          ...person,
+          friends: [
+            ...person.friends,
+            {
+              user_id: personId,
+              friendship_status: acceptRequest ? "friends" : "declined",
+            },
+          ],
+        };
+      }
+      return person;
+    });
+
+    setUsers(updatedUsers);
+
+    if (acceptRequest) {
+      await axios.post(`/api/accept-friend-request/${currentUser._id}/${personId}`);
+    } else {
+      await axios.post(`/api/decline-friend-request/${currentUser._id}/${personId}`);
+    }
+  } catch (error) {
+    console.error("Error handling friend request: ", error);
+  }
+};
+
+// For accepting a friend request
+const acceptFriendRequest = async (personId) => {
+  handleFriendRequest(personId, true); 
+};
+
+// For declining a friend request
+const declineFriendRequest = async (personId) => {
+  handleFriendRequest(personId, false);
+};
 
   return (
     <div className="container">
@@ -210,22 +321,57 @@ export const Home = ({ currentUser, setFriendId }) => {
               <h2>People You Might Know</h2>
               <div className="people-cards-container" ref={containerRef}>
                 <div className="people-cards">
-                  {users.map((person) => (
-                    <div key={person._id} className="person-card">
-                      <img
-                        src={`../images/${person.profileImage}`}
-                        alt={person.name}
-                        onClick={() => profileImageClicked(person._id)}
-                      />
-                      <h3>
-                        {person.firstName} {person.lastName}
-                      </h3>
-                      <div className="add-friend-btn">
-                        <PersonAdd />
-                        <span> Add </span>
+                  {users
+                    .filter((person) => person._id !== currentUser._id)
+                    .filter((person) => {
+                      const friendStatus = currentUser.friends?.find(
+                        (friend) => friend.user_id === person._id
+                      )?.friendship_status;
+
+                      return friendStatus !== "friends";
+                    })
+                    .map((person) => (
+                      <div key={person._id} className="person-card">
+                        <img
+                          src={`../images/${person.profileImage}`}
+                          alt={person.name}
+                          onClick={() => profileImageClicked(person._id)}
+                        />
+                        <h3>
+                          {person.firstName} {person.lastName}
+                        </h3>
+
+                        {currentUser.friends?.find(
+                          (friend) => friend.user_id === person._id
+                        ) ? (
+                          currentUser.friends.find(
+                            (friend) => friend.user_id === person._id
+                          ).friendship_status === "request" ? (
+                            <div className="request-buttons">
+                              <DoneOutline style={{cursor:"pointer"}} onClick={() => acceptFriendRequest(person._id)} />
+                              <Close style={{cursor:"pointer"}} onClick={() => declineFriendRequest(person._id)} />
+                            </div>
+                          ) : (
+                            <div className="add-friend-btn">    
+                            <span>
+                              {
+                                currentUser.friends.find(
+                                  (friend) => friend.user_id === person._id
+                                  ).friendship_status
+                                }
+                            </span>
+                            </div>
+                          )
+                        ) : (
+                          <div className="add-friend-btn">
+                            <div onClick={() => addFriendHandle(person._id)}>
+                              <PersonAdd />
+                              <span> Add </span>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
               <ArrowCircleRightOutlined
