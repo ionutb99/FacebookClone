@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLocationDot,
@@ -33,9 +33,69 @@ import {
   VideoCall,
   PhotoCamera,
   InsertEmoticonOutlined,
+  PersonAdd,
+  ArrowCircleRightOutlined,
+  ArrowCircleLeftOutlined,
 } from "@mui/icons-material";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export const Home = ({ currentUser }) => {
+export const Home = ({ currentUser, setFriendId }) => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      await axios
+        .get("/api")
+        .then((response) => {
+          setUsers(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
+        });
+    };
+    fetchUsers();
+  }, []);
+
+  const containerRef = useRef(null);
+  const navigate = useNavigate();
+
+  const calculateScrollAmount = () => {
+    const container = containerRef.current;
+    const containerWidth = container.clientWidth;
+    const numVisibleCards = 3;
+    return containerWidth / numVisibleCards;
+  };
+
+  const scrollToPerson = (scrollAmount) => {
+    const container = containerRef.current;
+    const currentScroll = container.scrollLeft;
+    const newScroll = currentScroll + scrollAmount;
+    container.scrollTo({
+      left: newScroll,
+      behavior: "smooth",
+    });
+  };
+
+  const scrollToPreviousPerson = () => {
+    const scrollAmount = -calculateScrollAmount() * 3;
+    scrollToPerson(scrollAmount);
+  };
+
+  const scrollToNextPerson = () => {
+    const scrollAmount = calculateScrollAmount() * 3;
+    scrollToPerson(scrollAmount);
+  };
+
+  const profileImageClicked = (personId) => {
+    setFriendId(personId);
+    if (currentUser._id === personId) {
+      navigate(`/profile`);  
+    } else {
+      navigate(`/user/${personId}`);
+    }
+  };
+
   return (
     <div className="container">
       {currentUser ? (
@@ -78,7 +138,12 @@ export const Home = ({ currentUser }) => {
 
           <div className="main-content">
             <div className="story-gallery">
-              <div className="story story1" style={{backgroundImage:`url(../images/${currentUser?.profileImage})`}}>
+              <div
+                className="story story1"
+                style={{
+                  backgroundImage: `url(../images/${currentUser?.profileImage})`,
+                }}
+              >
                 <img src={UploadImg1} alt="uploadImg1" />
                 <p>Post Story</p>
               </div>
@@ -101,9 +166,12 @@ export const Home = ({ currentUser }) => {
             </div>
             <div className="write-post-container">
               <div className="user-profile">
-                <img src={`../images/${currentUser?.profileImage}`} alt="profileImg" />
+                <img
+                  src={`../images/${currentUser?.profileImage}`}
+                  alt="profileImg"
+                />
                 <div>
-                  <p>{currentUser?.firstName +" " + currentUser?.lastName}</p>
+                  <p>{currentUser?.firstName + " " + currentUser?.lastName}</p>
                   <small>
                     Public <FontAwesomeIcon icon={faCaretDown} />
                   </small>
@@ -118,19 +186,56 @@ export const Home = ({ currentUser }) => {
                   ></textarea>
                 </div>
                 <div className="add-post-links">
-                  <a >
+                  <a>
                     <VideoCall className="addPostIconLive" /> Live Video
                   </a>
-                  <a >
+                  <a>
                     <PhotoCamera className="addPostIconPhoto" /> Photo/Video
                   </a>
-                  <a >
+                  <a>
                     <InsertEmoticonOutlined className="addPostIconFeeling" />{" "}
                     Feeling/Activity{" "}
                   </a>
                 </div>
               </div>
             </div>
+
+            <br />
+
+            <div className="people-you-might-know">
+              <ArrowCircleLeftOutlined
+                onClick={scrollToPreviousPerson}
+                className="arrow-left-friends "
+              />
+              <h2>People You Might Know</h2>
+              <div className="people-cards-container" ref={containerRef}>
+                <div className="people-cards">
+                  {users.map((person) => (
+                    <div key={person._id} className="person-card">
+                      <img
+                        src={`../images/${person.profileImage}`}
+                        alt={person.name}
+                        onClick={() => profileImageClicked(person._id)}
+                      />
+                      <h3>
+                        {person.firstName} {person.lastName}
+                      </h3>
+                      <div className="add-friend-btn">
+                        <PersonAdd />
+                        <span> Add </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <ArrowCircleRightOutlined
+                onClick={scrollToNextPerson}
+                className="arrow-right-friends"
+              />
+            </div>
+
+            <br />
+
             {/* START */}
             <div className="post-container">
               <div className="post-row">

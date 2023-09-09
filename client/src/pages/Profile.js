@@ -74,14 +74,15 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
 
   const handlePost = async () => {
     try {
-
-      console.log("postText:", postText);
-      console.log("photoVideoContent:", photoVideoContent);
-    
+      if (!postText || !photoVideoContent) {
+        console.error("Post text and photo/video content cannot be empty.");
+        return;
+      }
+      
       const formData = new FormData();
       formData.append("text", postText);
       formData.append("postContent", photoVideoContent);
-  
+
       const response = await axios.post(
         `/api/posts/create/${currentUser?._id}`,
         formData,
@@ -91,28 +92,30 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
           },
         }
       );
-  
+
       const newPost = response.data.posts[response.data.posts.length - 1];
       const updatedPosts = [...currentUser.posts, newPost];
-  
+
       setCurrentUser({
         ...currentUser,
         posts: updatedPosts,
       });
-  
+
       const updatedUser = {
         ...currentUser,
         posts: updatedPosts,
       };
       localStorage.setItem("user", JSON.stringify(updatedUser));
-  
+
       setPostText("");
       setPhotoVideoContent(null);
     } catch (error) {
-      console.error("Error creating post: ", error.response?.data || error.message);
+      console.error(
+        "Error creating post: ",
+        error.response?.data || error.message
+      );
     }
   };
-  
 
   const togglePhotoVideoOverlay = () => {
     setIsPhotoVideoOverlayOpen(!isPhotoVideoOverlayOpen);
@@ -221,7 +224,10 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
             <div className="photo-box">
               {currentUser?.posts.map((post, idx) => (
                 <div key={idx}>
-                  <img src={`../images/${post?.postContent}`} alt="photoContent" />
+                  <img
+                    src={`../images/${post?.postContent}`}
+                    alt="photoContent"
+                  />
                 </div>
               ))}
             </div>

@@ -67,61 +67,77 @@ export const UpdateProfileInfo = ({ currentUser, setCurrentUser }) => {
   };
 
   return (
-    <div className="update-profile-info-div">
-      <h2>Profile Update</h2>
-      <input
-        type="text"
-        placeholder="Intro"
-        name="intro"
-        value={updatedProfile.intro}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        placeholder="Job"
-        name="profileJob"
-        value={updatedProfile.profileJob}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        placeholder="Study"
-        name="profileStudy"
-        value={updatedProfile.profileStudy}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        placeholder="Graduate"
-        name="profileStudyGraduate"
-        value={updatedProfile.profileStudyGraduate}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        placeholder="Home"
-        name="profileHome"
-        value={updatedProfile.profileHome}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        placeholder="Location"
-        name="profileLocation"
-        value={updatedProfile.profileLocation}
-        onChange={handleChange}
-      />
-      <button
-        className="registerButton"
-        type="button"
-        onClick={handleUpdateProfile}
-      >
-        Update Profile
-      </button>
+    <div className="update-about-content">
+      <div className="update-profile-info-div">
+        <h2>Profile Update</h2>
+        <div>
+          Intro
+          <input
+            type="text"
+            placeholder="Intro"
+            name="intro"
+            value={updatedProfile.intro}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          Job
+          <input
+            type="text"
+            placeholder="Job"
+            name="profileJob"
+            value={updatedProfile.profileJob}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          Study
+          <input
+            type="text"
+            placeholder="Study"
+            name="profileStudy"
+            value={updatedProfile.profileStudy}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          Study Graduate
+          <input
+            type="text"
+            placeholder="Graduate"
+            name="profileStudyGraduate"
+            value={updatedProfile.profileStudyGraduate}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          Home
+          <input
+            type="text"
+            placeholder="Home"
+            name="profileHome"
+            value={updatedProfile.profileHome}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          Location
+          <input
+            type="text"
+            placeholder="Location"
+            name="profileLocation"
+            value={updatedProfile.profileLocation}
+            onChange={handleChange}
+          />
+        </div>
+        <button
+          className="registerButton"
+          type="button"
+          onClick={handleUpdateProfile}
+        >
+          Update Profile
+        </button>
+      </div>
     </div>
   );
 };
-
-
-
-

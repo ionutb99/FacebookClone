@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AttachFile } from "@mui/icons-material";
 
 export const EditPhotos = ({ currentUser, setCurrentUser }) => {
   const [profileImage, setProfileImage] = useState(null);
@@ -24,13 +25,17 @@ export const EditPhotos = ({ currentUser, setCurrentUser }) => {
       formData.append("profileImage", profileImage);
       formData.append("coverPhoto", coverPhoto);
       formData.append("firstName", firstName); // Add firstName
-      formData.append("lastName", lastName);   // Add lastName
+      formData.append("lastName", lastName); // Add lastName
 
-      const response = await axios.put(`/api/photos/update/${currentUser._id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.put(
+        `/api/photos/update/${currentUser._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       console.log("Photos updated:", response.data);
 
@@ -53,47 +58,49 @@ export const EditPhotos = ({ currentUser, setCurrentUser }) => {
   };
 
   return (
-    <div className="edit-photos-container">
-      <h2>Edit Name and Photos</h2>
-      <div>
-        <label htmlFor="firstName">First Name:</label>
-        <input
-          type="text"
-          id="firstName"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
+    <div className="edit-photos-page">
+      <div className="edit-photos-container">
+        <h2>Edit Name and Photos</h2>
+        <div>
+          <label htmlFor="firstName">First Name:</label>
+          <input
+            type="text"
+            id="firstName"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="lastName">Last Name:</label>
+          <input
+            type="text"
+            id="lastName"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="profileImage"  className="custom-file-upload" >Profile Image: <AttachFile /></label>
+          <input
+            type="file"
+            id="profileImage"
+            accept="image/*"
+            onChange={handleProfileImageChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="coverPhoto" className="custom-file-upload">Cover Photo: <AttachFile /> </label>
+          <input
+            type="file"
+            id="coverPhoto"
+            accept="image/*"
+            onChange={handleCoverPhotoChange}
+          />
+        </div>
+        <button className="upload-button" onClick={handleUpdatePhotos}>
+          Update Photos
+        </button>
       </div>
-      <div>
-        <label htmlFor="lastName">Last Name:</label>
-        <input
-          type="text"
-          id="lastName"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="profileImage">Profile Image:</label>
-        <input
-          type="file"
-          id="profileImage"
-          accept="image/*"
-          onChange={handleProfileImageChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="coverPhoto">Cover Photo:</label>
-        <input
-          type="file"
-          id="coverPhoto"
-          accept="image/*"
-          onChange={handleCoverPhotoChange}
-        />
-      </div>
-      <button className="upload-button" onClick={handleUpdatePhotos}>
-        Update Photos
-      </button>
     </div>
   );
 };

@@ -144,6 +144,7 @@ nav {
 
 .main-content {
   flex-basis: 47%;
+  max-width: 47%;
 }
 
 .imp-links {
@@ -506,7 +507,6 @@ nav {
   top: 30px;
   right: 0;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(122, 121, 121, 1);
   padding: 0 10px;  
   background:#626262;
 }
@@ -656,6 +656,92 @@ nav {
   background: #222121;
 }
 
+
+.people-you-might-know {
+  position: relative;
+  background: var(--bg-color);
+  padding: 15px;
+  padding-bottom: 25px;
+  border-radius: 6px;
+  color: #626262;
+}
+
+.people-cards-container {
+  padding: 10px;
+  overflow-x: hidden;
+}
+
+.arrow-right-friends {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.arrow-left-friends {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.people-you-might-know h2 {
+   padding-bottom: 10px;
+}
+
+.people-cards {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+}
+
+.person-card {
+  background: var(--bg-color) ;
+  flex: 0 0 calc(33.33% - 16px);
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0 , 0.3);
+  padding-bottom: 10px;
+  text-align: center;
+  align-items: center;
+}
+
+.person-card h3 {
+  font-size: small;
+  cursor:default;
+}
+
+.person-card img {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.add-friend-btn {
+  background: rgba(0, 123, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  margin-top: 10px;
+  margin-left: 10%;
+  border-radius: 10px;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.add-friend-btn span {
+  margin-left: 6px;
+  color: #007bff;
+}
+
+
+
+
 /* Profile CSS */
 
 .profile-container {
@@ -796,7 +882,8 @@ nav {
   padding: 2px 10px;
   box-shadow: 0 0 10px ;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.3s ease-in-out;
+  z-index: 3;
 
 }
 
@@ -826,6 +913,7 @@ nav {
   text-align: center;
   margin: 10px 0;
   font-size: 15px;
+  z-index: -1;
 }
 
 .intro-text img {
@@ -1046,6 +1134,118 @@ span {
   color: #9a9a9a;
 }
 
+/* Update About CSS */
+
+.update-about-content {
+  height: 75vh;
+}
+
+.update-profile-info-div {
+  max-width: 400px;
+  margin: 0 auto;
+  margin-top: 8%;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: var(--body-color);
+  color: #626262;
+
+}
+
+.update-profile-info-div h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #626262;
+}
+
+.update-profile-info-div input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.update-profile-info-div .registerButton {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.update-profile-info-div .registerButton:hover {
+  background-color: #0056b3;
+}
+
+
+/* Update Profile CSS */
+
+.edit-photos-page {
+  height: 85vh;
+}
+
+.edit-photos-container {
+  max-width: 400px;
+  margin: 0 auto;
+  margin-top: 8%;
+  background-color: var(--body-color);
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.edit-photos-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #626262;
+}
+
+.edit-photos-container label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #626262;
+}
+
+.edit-photos-container input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  color: #626262;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.edit-photos-container input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  border-bottom: 2px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+
+.upload-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding:10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.upload-button:hover {
+  background-color: #0056b3;
+}
+
+
+
 /* media query-- home page */
 
 @media (max-width: 900px) {
@@ -1061,6 +1261,9 @@ span {
   .search-box {
     display: none;
   }
+  .update-about-content {
+    height: 90vh;
+  }
   .logo {
     width: 110px;
     margin-right: 20px;
@@ -1070,7 +1273,8 @@ span {
     margin: 0 8px;
   }
   .nav-user-icon img {
-    width: 30px;
+    width: 35px;
+    height: 40px;
   }
   .nav-user-icon {
     margin-left: 0;
@@ -1080,6 +1284,7 @@ span {
   }
   .main-content {
     flex-basis: 100%;
+    max-width: 100%;
   }
   .story img {
     width: 30px;
