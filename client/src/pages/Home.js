@@ -122,7 +122,6 @@ export const Home = ({ currentUser, setFriendId }) => {
             friendship_status: "pending",
           };
         } else if (person._id === currentUser._id) {
-          // Update the currentUser's friends list
           return {
             ...person,
             friends: [
@@ -138,6 +137,7 @@ export const Home = ({ currentUser, setFriendId }) => {
       });
 
       setUsers(updatedUsers);
+      window.location.reload();
 
       await axios.post(`/api/add-friend/${currentUser._id}/${personId}`);
     } catch (error) {
@@ -145,67 +145,71 @@ export const Home = ({ currentUser, setFriendId }) => {
     }
   };
 
-const handleFriendRequest = async (personId, acceptRequest) => {
-  try {
-    setFriendId(personId);
+  const handleFriendRequest = async (personId, acceptRequest) => {
+    try {
+      setFriendId(personId);
 
-    const updatedCurrentUser = {
-      ...currentUser,
-      friends: currentUser.friends.map((friend) => {
-        if (friend.user_id === personId) {
+      const updatedCurrentUser = {
+        ...currentUser,
+        friends: currentUser.friends.map((friend) => {
+          if (friend.user_id === personId) {
+            return {
+              ...friend,
+              friendship_status: acceptRequest ? "friends" : "declined",
+            };
+          }
+          return friend;
+        }),
+      };
+
+      localStorage.setItem("user", JSON.stringify(updatedCurrentUser));
+
+      const updatedUsers = users.map((person) => {
+        if (person._id === personId) {
           return {
-            ...friend,
+            ...person,
             friendship_status: acceptRequest ? "friends" : "declined",
           };
+        } else if (person._id === currentUser._id) {
+          return {
+            ...person,
+            friends: [
+              ...person.friends,
+              {
+                user_id: personId,
+                friendship_status: acceptRequest ? "friends" : "declined",
+              },
+            ],
+          };
         }
-        return friend;
-      }),
-    };
+        return person;
+      });
 
-    localStorage.setItem("user", JSON.stringify(updatedCurrentUser));
+      setUsers(updatedUsers);
 
-    const updatedUsers = users.map((person) => {
-      if (person._id === personId) {
-        return {
-          ...person,
-          friendship_status: acceptRequest ? "friends" : "declined",
-        };
-      } else if (person._id === currentUser._id) {
-        return {
-          ...person,
-          friends: [
-            ...person.friends,
-            {
-              user_id: personId,
-              friendship_status: acceptRequest ? "friends" : "declined",
-            },
-          ],
-        };
+      if (acceptRequest) {
+        await axios.post(
+          `/api/accept-friend-request/${currentUser._id}/${personId}`
+        );
+      } else {
+        await axios.post(
+          `/api/decline-friend-request/${currentUser._id}/${personId}`
+        );
       }
-      return person;
-    });
-
-    setUsers(updatedUsers);
-
-    if (acceptRequest) {
-      await axios.post(`/api/accept-friend-request/${currentUser._id}/${personId}`);
-    } else {
-      await axios.post(`/api/decline-friend-request/${currentUser._id}/${personId}`);
+    } catch (error) {
+      console.error("Error handling friend request: ", error);
     }
-  } catch (error) {
-    console.error("Error handling friend request: ", error);
-  }
-};
+  };
 
-// For accepting a friend request
-const acceptFriendRequest = async (personId) => {
-  handleFriendRequest(personId, true); 
-};
+  const acceptFriendRequest = async (personId) => {
+    handleFriendRequest(personId, true);
+    window.location.reload();
+  };
 
-// For declining a friend request
-const declineFriendRequest = async (personId) => {
-  handleFriendRequest(personId, false);
-};
+  const declineFriendRequest = async (personId) => {
+    handleFriendRequest(personId, false);
+    window.location.reload();
+  };
 
   return (
     <div className="container">
@@ -344,22 +348,28 @@ const declineFriendRequest = async (personId) => {
                         {currentUser.friends?.find(
                           (friend) => friend.user_id === person._id
                         ) ? (
-                          currentUser.friends.find(
+                          currentUser.friends?.find(
                             (friend) => friend.user_id === person._id
                           ).friendship_status === "request" ? (
                             <div className="request-buttons">
-                              <DoneOutline style={{cursor:"pointer"}} onClick={() => acceptFriendRequest(person._id)} />
-                              <Close style={{cursor:"pointer"}} onClick={() => declineFriendRequest(person._id)} />
+                              <DoneOutline
+                                style={{ cursor: "pointer" }}
+                                onClick={() => acceptFriendRequest(person._id)}
+                              />
+                              <Close
+                                style={{ cursor: "pointer" }}
+                                onClick={() => declineFriendRequest(person._id)}
+                              />
                             </div>
                           ) : (
-                            <div className="add-friend-btn">    
-                            <span>
-                              {
-                                currentUser.friends.find(
-                                  (friend) => friend.user_id === person._id
+                            <div className="add-friend-btn">
+                              <span>
+                                {
+                                  currentUser.friends?.find(
+                                    (friend) => friend.user_id === person._id
                                   ).friendship_status
                                 }
-                            </span>
+                              </span>
                             </div>
                           )
                         ) : (

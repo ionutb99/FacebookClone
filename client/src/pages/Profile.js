@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
-import Member1 from "../images/member-1.png";
-import Member2 from "../images/member-2.png";
-import Member3 from "../images/member-3.png";
 import ProfileJob from "../images/profile-job.png";
 import ProfileStudy from "../images/profile-study.png";
 import ProfileHome from "../images/profile-home.png";
@@ -129,6 +126,32 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
 
   console.log(currentUser);
 
+  const friendsWithStatusFriends = currentUser?.friends.filter(
+    (friend) => friend.friendship_status === "friends"
+  );
+
+  const [friendData, setFriendData] = useState([]);
+
+  const fetchFriendData = async () => {
+    const friendIds = friendsWithStatusFriends.map((friend) => friend.user_id);
+    const friendPromises = friendIds.map(async (friendId) => {
+      try {
+        const response = await axios.get(`/api/user/${friendId}`);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching friend data: ", error);
+        return null;
+      }
+    });
+
+    const friendDataArray = await Promise.all(friendPromises);
+    setFriendData(friendDataArray.filter(Boolean));
+  };
+
+  useEffect(() => {
+    fetchFriendData();
+  }, []);
+
   return (
     <div className="profile-container">
       <img
@@ -149,7 +172,7 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
               <h3>
                 {currentUser?.firstName} {currentUser?.lastName}
               </h3>
-              <p>{currentUser?.friends.length} Friends</p>
+              <p>{currentUser?.friends.filter((friend) => friend.friendship_status !== "request").length} Friends</p>
               {/* <img src={} alt="member1" /> */}
             </div>
           </div>
@@ -237,26 +260,26 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
           <div className="profile-intro">
             <div className="title-box">
               <h3>Friends</h3>
-              <a >All Friends</a>
+              <a>All Friends</a>
             </div>
             <p>
-              {currentUser?.friends.length} (
-              { Math.round(currentUser?.friends.length - 1)} mutual)
+              {currentUser?.friends.filter((friend) => friend.friendship_status !== "request").length} (
+              {Math.round(currentUser?.friends.length)} mutual)
             </p>
 
             <div className="friend-box">
-              <div>
-                <img src={Member1} alt="member1" />
-                <p>Joseph N</p>
-              </div>
-              <div>
-                <img src={Member2} alt="member2" />
-                <p>Nathan N</p>
-              </div>
-              <div>
-                <img src={Member3} alt="member3" />
-                <p>George D</p>
-              </div>
+              {friendData.map((friend) => (
+                <div key={friend._id}>
+                  <img
+                    src={`../images/${friend.profileImage}`}
+                    alt={`profile-${friend._id}`}
+                    onClick={() => navigate(`/user/${friend._id}`)}
+                  />
+                  <p>
+                    {friend.firstName} {friend.lastName}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -300,13 +323,12 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
               {isPhotoVideoOverlayOpen && (
                 <div className="photo-video-overlay">
                   <div>
-                    <label
-                      htmlFor="postContent"
-                      className="custom-file-upload"
-                    >Choose Post: <AttachFile /></label>
+                    <label htmlFor="postContent" className="custom-file-upload">
+                      Choose Post: <AttachFile />
+                    </label>
                     <input
                       type="file"
-                      style={{display:"none"}}
+                      style={{ display: "none" }}
                       id="postContent"
                       accept="image/*, video/*"
                       name="postContent"
