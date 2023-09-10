@@ -21,14 +21,16 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export const Profile = ({ currentUser, setCurrentUser }) => {
+export const Profile = ({ currentUser, setCurrentUser, setFriendId }) => {
   const [isSettingsIntroOpen, setIsSettingsIntroOpen] = useState(false);
   const [isSettingsProfileOpen, setIsSettingsProfileOpen] = useState(false);
   const [postText, setPostText] = useState("");
   const [photoVideoContent, setPhotoVideoContent] = useState(null);
   const [isPhotoVideoOverlayOpen, setIsPhotoVideoOverlayOpen] = useState(false);
   const [activePostId, setActivePostId] = useState(null);
+  const [friendData, setFriendData] = useState([]);
 
+  
   const navigate = useNavigate();
 
   const settingsMenuToggle = () => {
@@ -124,13 +126,12 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
     setIsPhotoVideoOverlayOpen(false);
   };
 
-  console.log(currentUser);
-
+  
   const friendsWithStatusFriends = currentUser?.friends.filter(
     (friend) => friend.friendship_status === "friends"
   );
 
-  const [friendData, setFriendData] = useState([]);
+  
 
   const fetchFriendData = async () => {
     const friendIds = friendsWithStatusFriends.map((friend) => friend.user_id);
@@ -143,15 +144,23 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
         return null;
       }
     });
-
+    
     const friendDataArray = await Promise.all(friendPromises);
     setFriendData(friendDataArray.filter(Boolean));
   };
 
+  const handleFriendProfile = (personIds) => {
+    setFriendId(personIds)
+    navigate(`/user/${personIds}`)
+  }
+  
   useEffect(() => {
     fetchFriendData();
   }, []);
+  
 
+  console.log(currentUser);
+  
   return (
     <div className="profile-container">
       <img
@@ -273,7 +282,7 @@ export const Profile = ({ currentUser, setCurrentUser }) => {
                   <img
                     src={`../images/${friend.profileImage}`}
                     alt={`profile-${friend._id}`}
-                    onClick={() => navigate(`/user/${friend._id}`)}
+                    onClick={() => handleFriendProfile(friend._id)}
                   />
                   <p>
                     {friend.firstName} {friend.lastName}

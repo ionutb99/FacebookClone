@@ -124,7 +124,7 @@ export const FriendProfile = ({ friendId }) => {
             </div>
             <p>
               {user?.friends?.length} (
-              {user?.friends?.length / Math.random()} mutual)
+              {user?.friends?.length } mutual)
             </p>
 
             <div className="friend-box">
