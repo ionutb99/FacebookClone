@@ -131,7 +131,6 @@ export const Profile = ({ currentUser, setCurrentUser, setFriendId }) => {
     (friend) => friend.friendship_status === "friends"
   );
 
-  
 
   const fetchFriendData = async () => {
     const friendIds = friendsWithStatusFriends.map((friend) => friend.user_id);
@@ -145,6 +144,7 @@ export const Profile = ({ currentUser, setCurrentUser, setFriendId }) => {
       }
     });
     
+    localStorage.removeItem('friendUser');
     const friendDataArray = await Promise.all(friendPromises);
     setFriendData(friendDataArray.filter(Boolean));
   };
@@ -273,7 +273,7 @@ export const Profile = ({ currentUser, setCurrentUser, setFriendId }) => {
             </div>
             <p>
               {currentUser?.friends.filter((friend) => friend.friendship_status !== "request").length} (
-              {Math.round(currentUser?.friends.length)} mutual)
+               0 mutual)
             </p>
 
             <div className="friend-box">

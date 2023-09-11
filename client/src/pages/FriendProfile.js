@@ -1,6 +1,12 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Add, ForumOutlined, MoreHoriz, ShareOutlined, ThumbUp } from '@mui/icons-material'
-import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  Add,
+  ForumOutlined,
+  MoreHoriz,
+  ShareOutlined,
+  ThumbUp,
+} from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
 import Member1 from "../images/member-1.png";
 import Member2 from "../images/member-2.png";
 import Member3 from "../images/member-3.png";
@@ -9,27 +15,42 @@ import ProfileStudy from "../images/profile-study.png";
 import ProfileHome from "../images/profile-home.png";
 import ProfileLocation from "../images/profile-location.png";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
-import axios from 'axios';
+import axios from "axios";
+import { addFriendHandle } from "../helpers/AddFriendHandle";
 
+export const FriendProfile = ({
+  friendId,
+  setFriendId,
+  currentUser,
+  users,
+  setUsers,
+}) => {
+  const [user, setUser] = useState([]);
 
-export const FriendProfile = ({ friendId }) => {
-    const [user, setUser] = useState([]);
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(`/api/user/${friendId}`);
+      const userData = response.data;
+      setUser(userData);
 
+      localStorage.setItem("friendUser", JSON.stringify(userData));
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-          await axios
-            .get(`/api/user/${friendId}`)
-            .then((response) => {
-              setUser(response.data);
-            })
-            .catch((error) => {
-              console.error("Error fetching users:", error);
-            });
-        };
-        fetchUsers();
-      }, [friendId]);
+  useEffect(() => {
+    const savedUserData = localStorage.getItem("friendUser");
 
+    if (savedUserData) {
+      const userData = JSON.parse(savedUserData);
+      setUser(userData);
+    } else {
+      fetchUsers();
+    }
+  }, [friendId]);
+
+  console.log(user);
 
   return (
     <div className="profile-container">
@@ -58,14 +79,37 @@ export const FriendProfile = ({ friendId }) => {
         </div>
 
         <div className="pd-right">
-          <button type="button">
-            <Add /> <b>Add Friend</b>
-          </button>
+          {user?.friends &&
+          user.friends.some((friend) => friend.user_id === currentUser._id) ? (
+            <div className="friends-status">
+              <h4>
+                {" "}
+                {
+                  user.friends.find(
+                    (friend) => friend.user_id === currentUser._id
+                  )?.friendship_status
+                }
+              </h4>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() =>
+                addFriendHandle(
+                  user?._id,
+                  currentUser,
+                  setFriendId,
+                  users,
+                  setUsers
+                )
+              }
+            >
+              <Add /> <b>Add Friend</b>
+            </button>
+          )}
 
           <br />
-          <MoreHoriz
-            className="edit-photo-cover"
-          />
+          <MoreHoriz className="edit-photo-cover" />
         </div>
       </div>
 
@@ -122,10 +166,7 @@ export const FriendProfile = ({ friendId }) => {
               <h3>Friends</h3>
               <a href="#">All Friends</a>
             </div>
-            <p>
-              {user?.friends?.length} (
-              {user?.friends?.length } mutual)
-            </p>
+            <p>{user?.friends?.length} ( 0 mutual)</p>
 
             <div className="friend-box">
               <div>
@@ -153,9 +194,7 @@ export const FriendProfile = ({ friendId }) => {
                     alt="profileImg"
                   />
                   <div>
-                    <p>
-                      {user?.firstName + " " + user?.lastName}
-                    </p>
+                    <p>{user?.firstName + " " + user?.lastName}</p>
                     <span>{post?.timestamp}</span>
                   </div>
                 </div>
@@ -194,5 +233,5 @@ export const FriendProfile = ({ friendId }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

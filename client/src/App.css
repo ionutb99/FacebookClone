@@ -824,6 +824,12 @@ nav {
   width: 20px;
 }
 
+.friends-status {
+  padding: 5px 15px;
+  border-radius: 10px;
+  background-color: rgba(0, 123, 255, 0.3);
+}
+
 .edit-photo-cover {
   position: absolute;
   right: 10px;
@@ -832,6 +838,7 @@ nav {
 }
 
 .profile-info {
+  position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;

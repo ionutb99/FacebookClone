@@ -41,9 +41,9 @@ import {
 } from "@mui/icons-material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { addFriendHandle } from "../helpers/AddFriendHandle";
 
-export const Home = ({ currentUser, setFriendId }) => {
-  const [users, setUsers] = useState([]);
+export const Home = ({ currentUser, setFriendId, users, setUsers }) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -56,6 +56,7 @@ export const Home = ({ currentUser, setFriendId }) => {
           console.error("Error fetching users:", error);
         });
     };
+    localStorage.removeItem('friendUser');
     fetchUsers();
   }, []);
 
@@ -98,52 +99,6 @@ export const Home = ({ currentUser, setFriendId }) => {
     }
   };
 
-  const addFriendHandle = async (personId) => {
-    try {
-      setFriendId(personId);
-
-      const updatedCurrentUser = {
-        ...currentUser,
-        friends: [
-          ...currentUser.friends,
-          {
-            user_id: personId,
-            friendship_status: "pending",
-          },
-        ],
-      };
-
-      localStorage.setItem("user", JSON.stringify(updatedCurrentUser));
-
-      const updatedUsers = users.map((person) => {
-        if (person._id === personId) {
-          return {
-            ...person,
-            friendship_status: "pending",
-          };
-        } else if (person._id === currentUser._id) {
-          return {
-            ...person,
-            friends: [
-              ...person.friends,
-              {
-                user_id: personId,
-                friendship_status: "pending",
-              },
-            ],
-          };
-        }
-        return person;
-      });
-
-      setUsers(updatedUsers);
-      window.location.reload();
-
-      await axios.post(`/api/add-friend/${currentUser._id}/${personId}`);
-    } catch (error) {
-      console.error("Error adding friend: ", error);
-    }
-  };
 
   const handleFriendRequest = async (personId, acceptRequest) => {
     try {
@@ -374,7 +329,7 @@ export const Home = ({ currentUser, setFriendId }) => {
                           )
                         ) : (
                           <div className="add-friend-btn">
-                            <div onClick={() => addFriendHandle(person._id)}>
+                            <div onClick={() => addFriendHandle(person._id, currentUser, setFriendId, users, setUsers)}>
                               <PersonAdd />
                               <span> Add </span>
                             </div>
