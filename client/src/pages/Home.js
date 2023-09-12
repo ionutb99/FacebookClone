@@ -5,11 +5,7 @@ import {
   faCaretDown,
   faEllipsisV,
 } from "@fortawesome/free-solid-svg-icons";
-import Shortcut1 from "../images/shortcut-1.png";
-import Shortcut2 from "../images/shortcut-2.png";
-import Shortcut3 from "../images/shortcut-3.png";
-import Shortcut4 from "../images/shortcut-4.png";
-import Advertisement from "../images/advertisement.png";
+
 import Member1 from "../images/member-1.png";
 import Member2 from "../images/member-2.png";
 import Member3 from "../images/member-3.png";
@@ -25,11 +21,6 @@ import {
   ForumOutlined,
   ShareOutlined,
   ThumbUp,
-  LiveTvOutlined,
-  LocalGroceryStore,
-  Groups,
-  Group,
-  Newspaper,
   VideoCall,
   PhotoCamera,
   InsertEmoticonOutlined,
@@ -39,55 +30,33 @@ import {
   Close,
   DoneOutline,
 } from "@mui/icons-material";
+
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { addFriendHandle } from "../helpers/AddFriendHandle";
+import { fetchUsers } from "../helpers/FetchAllUsers";
+import {
+  scrollToPreviousPerson,
+  scrollToNextPerson,
+} from "../helpers/scrollUtils";
+import { LeftSidebar } from "../components/LeftSidebar";
+import { RightSidebar } from "../components/RightSidebar";
 
 export const Home = ({ currentUser, setFriendId, users, setUsers }) => {
-
   useEffect(() => {
-    const fetchUsers = async () => {
-      await axios
-        .get("/api")
-        .then((response) => {
-          setUsers(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching users:", error);
-        });
-    };
-    localStorage.removeItem('friendUser');
-    fetchUsers();
+    localStorage.removeItem("friendUser");
+    fetchUsers(setUsers);
   }, []);
 
   const containerRef = useRef(null);
   const navigate = useNavigate();
 
-  const calculateScrollAmount = () => {
-    const container = containerRef.current;
-    const containerWidth = container.clientWidth;
-    const numVisibleCards = 3;
-    return containerWidth / numVisibleCards;
+  const handleScrollToPreviousPerson = () => {
+    scrollToPreviousPerson(containerRef);
   };
 
-  const scrollToPerson = (scrollAmount) => {
-    const container = containerRef.current;
-    const currentScroll = container.scrollLeft;
-    const newScroll = currentScroll + scrollAmount;
-    container.scrollTo({
-      left: newScroll,
-      behavior: "smooth",
-    });
-  };
-
-  const scrollToPreviousPerson = () => {
-    const scrollAmount = -calculateScrollAmount() * 3;
-    scrollToPerson(scrollAmount);
-  };
-
-  const scrollToNextPerson = () => {
-    const scrollAmount = calculateScrollAmount() * 3;
-    scrollToPerson(scrollAmount);
+  const handleScrollToNextPerson = () => {
+    scrollToNextPerson(containerRef);
   };
 
   const profileImageClicked = (personId) => {
@@ -98,7 +67,6 @@ export const Home = ({ currentUser, setFriendId, users, setUsers }) => {
       navigate(`/user/${personId}`);
     }
   };
-
 
   const handleFriendRequest = async (personId, acceptRequest) => {
     try {
@@ -170,42 +138,7 @@ export const Home = ({ currentUser, setFriendId, users, setUsers }) => {
     <div className="container">
       {currentUser ? (
         <>
-          <div className="left-sidebar">
-            <div className="imp-links">
-              <a href="#">
-                <Newspaper className="leftSideIcon" /> Latest News
-              </a>
-              <a href="#">
-                <Group className="leftSideIcon" /> Friends
-              </a>
-              <a href="#">
-                <Groups className="leftSideIcon" /> Group
-              </a>
-              <a href="#">
-                <LocalGroceryStore className="leftSideIcon" /> Marketplace
-              </a>
-              <a href="#">
-                <LiveTvOutlined className="leftSideIcon" /> Watch
-              </a>
-              <a href="#"> See More </a>
-            </div>
-            <div className="shortcut-links">
-              <p>Your Shortcuts</p>
-              <a href="#">
-                <img src={Shortcut1} alt="" /> Web Developers
-              </a>
-              <a href="#">
-                <img src={Shortcut2} alt="" /> Web Design Course
-              </a>
-              <a href="#">
-                <img src={Shortcut3} alt="" /> Full Stack Developer
-              </a>
-              <a href="#">
-                <img src={Shortcut4} alt="" /> Website Experts
-              </a>
-            </div>
-          </div>
-
+          <LeftSidebar />
           <div className="main-content">
             <div className="story-gallery">
               <div
@@ -274,7 +207,7 @@ export const Home = ({ currentUser, setFriendId, users, setUsers }) => {
 
             <div className="people-you-might-know">
               <ArrowCircleLeftOutlined
-                onClick={scrollToPreviousPerson}
+                onClick={handleScrollToPreviousPerson}
                 className="arrow-left-friends "
               />
               <h2>People You Might Know</h2>
@@ -329,7 +262,17 @@ export const Home = ({ currentUser, setFriendId, users, setUsers }) => {
                           )
                         ) : (
                           <div className="add-friend-btn">
-                            <div onClick={() => addFriendHandle(person._id, currentUser, setFriendId, users, setUsers)}>
+                            <div
+                              onClick={() =>
+                                addFriendHandle(
+                                  person._id,
+                                  currentUser,
+                                  setFriendId,
+                                  users,
+                                  setUsers
+                                )
+                              }
+                            >
                               <PersonAdd />
                               <span> Add </span>
                             </div>
@@ -340,7 +283,7 @@ export const Home = ({ currentUser, setFriendId, users, setUsers }) => {
                 </div>
               </div>
               <ArrowCircleRightOutlined
-                onClick={scrollToNextPerson}
+                onClick={handleScrollToNextPerson}
                 className="arrow-right-friends"
               />
             </div>
@@ -557,79 +500,7 @@ export const Home = ({ currentUser, setFriendId, users, setUsers }) => {
               Load More
             </button>
           </div>
-
-          <div className="right-sidebar">
-            <div className="sidebar-title">
-              <h4> Events</h4>
-              <a href="#"> See All</a>
-            </div>
-
-            <div className="event">
-              <div className="left-event">
-                <h3>31</h3>
-                <span>August</span>
-              </div>
-              <div className="right-event">
-                <h4>Social Media</h4>
-                <p>
-                  <FontAwesomeIcon icon={faLocationDot} /> Willson Tech Park
-                </p>
-                <a href="#moreInfo">More Info</a>
-              </div>
-            </div>
-            <div className="event">
-              <div className="left-event">
-                <h3>22</h3>
-                <span>September</span>
-              </div>
-              <div className="right-event">
-                <h4>Mobile Marketing</h4>
-                <p>
-                  <FontAwesomeIcon icon={faLocationDot} /> Willson Tech Park
-                </p>
-                <a href="#moreInfo">More Info</a>
-              </div>
-            </div>
-            <div className="sidebar-title">
-              <h4> Advertisment</h4>
-              <a href="#"> Close</a>
-            </div>
-            <img
-              src={Advertisement}
-              alt="advertisement"
-              className="sidebar-ads"
-            />
-
-            <div className="sidebar-title">
-              <h4> Conversation</h4>
-              <a href="#"> Hide Chat</a>
-            </div>
-
-            <div className="online-list">
-              <div className="online">
-                <img src={Member1} alt="member1" />
-              </div>
-              <p> Alison Mina</p>
-            </div>
-            <div className="online-list">
-              <div className="online">
-                <img src={Member2} alt="member2" />
-              </div>
-              <p> Jackson Aston</p>
-            </div>
-            <div className="online-list">
-              <div className="online">
-                <img src={Member3} alt="member3" />
-              </div>
-              <p> Samona Rose</p>
-            </div>
-            <div className="online-list">
-              <div className="online">
-                <img src={Member4} alt="member4" />
-              </div>
-              <p> John Doe</p>
-            </div>
-          </div>
+          <RightSidebar />
         </>
       ) : (
         <div style={{}}>
@@ -639,3 +510,5 @@ export const Home = ({ currentUser, setFriendId, users, setUsers }) => {
     </div>
   );
 };
+
+// 623

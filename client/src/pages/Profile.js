@@ -20,6 +20,8 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { addPost, deletePost, fetchFriendData } from "../helpers/apiServices";
+import PostInput from "../helpers/postCreation";
 
 export const Profile = ({ currentUser, setCurrentUser, setFriendId }) => {
   const [isSettingsIntroOpen, setIsSettingsIntroOpen] = useState(false);
@@ -30,7 +32,6 @@ export const Profile = ({ currentUser, setCurrentUser, setFriendId }) => {
   const [activePostId, setActivePostId] = useState(null);
   const [friendData, setFriendData] = useState([]);
 
-  
   const navigate = useNavigate();
 
   const settingsMenuToggle = () => {
@@ -46,75 +47,18 @@ export const Profile = ({ currentUser, setCurrentUser, setFriendId }) => {
 
   const handleDeletePost = async (postId) => {
     console.log(postId);
-    try {
-      await axios.delete(`/api/posts/delete/${postId}`);
-
-      const userDataString = localStorage.getItem("user");
-
-      const currentUser = JSON.parse(userDataString);
-
-      const updatedPosts = currentUser.posts.filter(
-        (post) => post._id !== postId
-      );
-
-      setCurrentUser({
-        ...currentUser,
-        posts: updatedPosts,
-      });
-
-      const updatedUser = {
-        ...currentUser,
-        posts: updatedPosts,
-      };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-    } catch (error) {
-      console.error("Error deleting post: ", error);
-    }
+    await deletePost(postId, setCurrentUser);
   };
 
   const handlePost = async () => {
-    try {
-      if (!postText || !photoVideoContent) {
-        console.error("Post text and photo/video content cannot be empty.");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("text", postText);
-      formData.append("postContent", photoVideoContent);
-
-      const response = await axios.post(
-        `/api/posts/create/${currentUser?._id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      const newPost = response.data.posts[response.data.posts.length - 1];
-      const updatedPosts = [...currentUser.posts, newPost];
-
-      setCurrentUser({
-        ...currentUser,
-        posts: updatedPosts,
-      });
-
-      const updatedUser = {
-        ...currentUser,
-        posts: updatedPosts,
-      };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-
-      setPostText("");
-      setPhotoVideoContent(null);
-    } catch (error) {
-      console.error(
-        "Error creating post: ",
-        error.response?.data || error.message
-      );
-    }
+    addPost(
+      currentUser,
+      setCurrentUser,
+      setPostText,
+      setPhotoVideoContent,
+      postText,
+      photoVideoContent
+    );
   };
 
   const togglePhotoVideoOverlay = () => {
@@ -126,41 +70,26 @@ export const Profile = ({ currentUser, setCurrentUser, setFriendId }) => {
     setIsPhotoVideoOverlayOpen(false);
   };
 
-  
   const friendsWithStatusFriends = currentUser?.friends.filter(
     (friend) => friend.friendship_status === "friends"
   );
 
-
-  const fetchFriendData = async () => {
-    const friendIds = friendsWithStatusFriends.map((friend) => friend.user_id);
-    const friendPromises = friendIds.map(async (friendId) => {
-      try {
-        const response = await axios.get(`/api/user/${friendId}`);
-        return response.data;
-      } catch (error) {
-        console.error("Error fetching friend data: ", error);
-        return null;
-      }
-    });
-    
-    localStorage.removeItem('friendUser');
-    const friendDataArray = await Promise.all(friendPromises);
-    setFriendData(friendDataArray.filter(Boolean));
+  const handleFriendProfile = (personIds) => {
+    setFriendId(personIds);
+    navigate(`/user/${personIds}`);
   };
 
-  const handleFriendProfile = (personIds) => {
-    setFriendId(personIds)
-    navigate(`/user/${personIds}`)
-  }
-  
   useEffect(() => {
-    fetchFriendData();
+    const fetchData = async () => {
+      const friendDataArray = await fetchFriendData(friendsWithStatusFriends);
+      setFriendData(friendDataArray);
+    };
+
+    fetchData();
   }, []);
-  
 
   console.log(currentUser);
-  
+
   return (
     <div className="profile-container">
       <img
@@ -181,7 +110,14 @@ export const Profile = ({ currentUser, setCurrentUser, setFriendId }) => {
               <h3>
                 {currentUser?.firstName} {currentUser?.lastName}
               </h3>
-              <p>{currentUser?.friends.filter((friend) => friend.friendship_status !== "request").length} Friends</p>
+              <p>
+                {
+                  currentUser?.friends.filter(
+                    (friend) => friend.friendship_status == "friends"
+                  ).length
+                }{" "}
+                Friends
+              </p>
               {/* <img src={} alt="member1" /> */}
             </div>
           </div>
@@ -272,8 +208,12 @@ export const Profile = ({ currentUser, setCurrentUser, setFriendId }) => {
               <a>All Friends</a>
             </div>
             <p>
-              {currentUser?.friends.filter((friend) => friend.friendship_status !== "request").length} (
-               0 mutual)
+              {
+                currentUser?.friends.filter(
+                  (friend) => friend.friendship_status == "friends"
+                ).length
+              }{" "}
+              ( 0 mutual)
             </p>
 
             <div className="friend-box">
@@ -293,62 +233,16 @@ export const Profile = ({ currentUser, setCurrentUser, setFriendId }) => {
           </div>
         </div>
         <div className="post-col">
-          <div className="write-post-container">
-            <div className="user-profile">
-              <img
-                src={`../images/${currentUser?.profileImage}`}
-                alt="profileImg"
-              />
-              <div>
-                <p>{currentUser?.firstName + " " + currentUser?.lastName}</p>
-                <small>
-                  Public <FontAwesomeIcon icon={faCaretDown} />
-                </small>
-              </div>
-            </div>
-
-            <div className="post-input-container">
-              <div className="input-row">
-                <textarea
-                  rows="3"
-                  placeholder="What's on your mind, John?"
-                  value={postText}
-                  onChange={(e) => setPostText(e.target.value)}
-                ></textarea>
-                <button onClick={handlePost}>Post</button>
-              </div>
-              <div className="add-post-links">
-                <a>
-                  <VideoCall className="addPostIconLive" /> Live Video
-                </a>
-                <a onClick={togglePhotoVideoOverlay}>
-                  <PhotoCamera className="addPostIconPhoto" /> Photo/Video
-                </a>
-                <a>
-                  <InsertEmoticonOutlined className="addPostIconFeeling" />{" "}
-                  Feeling/Activity{" "}
-                </a>
-              </div>
-              {isPhotoVideoOverlayOpen && (
-                <div className="photo-video-overlay">
-                  <div>
-                    <label htmlFor="postContent" className="custom-file-upload">
-                      Choose Post: <AttachFile />
-                    </label>
-                    <input
-                      type="file"
-                      style={{ display: "none" }}
-                      id="postContent"
-                      accept="image/*, video/*"
-                      name="postContent"
-                      onChange={(e) => setPhotoVideoContent(e.target.files[0])}
-                    />
-                  </div>
-                  <button onClick={handleSavePhotoVideoContent}>Save</button>
-                </div>
-              )}
-            </div>
-          </div>
+          <PostInput
+            currentUser={currentUser}
+            postText={postText}
+            setPostText={setPostText}
+            handlePost={handlePost}
+            togglePhotoVideoOverlay={togglePhotoVideoOverlay}
+            setPhotoVideoContent={setPhotoVideoContent}
+            isPhotoVideoOverlayOpen={isPhotoVideoOverlayOpen}
+            handleSavePhotoVideoContent={handleSavePhotoVideoContent}
+          />
 
           {currentUser?.posts?.map((post, idx) => (
             <div className="post-container" key={idx}>
@@ -417,3 +311,5 @@ export const Profile = ({ currentUser, setCurrentUser, setFriendId }) => {
     </div>
   );
 };
+
+//420
