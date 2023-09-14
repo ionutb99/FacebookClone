@@ -1,21 +1,19 @@
-import ProfileJob from "../images/profile-job.png";
-import ProfileStudy from "../images/profile-study.png";
-import ProfileHome from "../images/profile-home.png";
-import ProfileLocation from "../images/profile-location.png";
+import ProfileJob from "../../images/profile-job.png";
+import ProfileStudy from "../../images/profile-study.png";
+import ProfileHome from "../../images/profile-home.png";
+import ProfileLocation from "../../images/profile-location.png";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  Add,
   ForumOutlined,
-  MoreHoriz,
   ShareOutlined,
   ThumbUp,
 } from "@mui/icons-material";
-import { addFriendHandle } from "../helpers/AddFriendHandle";
+
 
 import React from "react";
 
-const ProfileInfoContent = ({ user }) => {
+const FriendProfileInfo = ({ user }) => {
   return (
     <div className="profile-info">
       <div className="info-col">
@@ -120,4 +118,4 @@ const ProfileInfoContent = ({ user }) => {
   );
 };
 
-export default ProfileInfoContent;
+export default FriendProfileInfo;

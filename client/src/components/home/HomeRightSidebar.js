@@ -1,10 +1,10 @@
-import Advertisement from "../images/advertisement.png";
+import Advertisement from "../../images/advertisement.png";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Member1 from "../images/member-1.png";
-import Member2 from "../images/member-2.png";
-import Member3 from "../images/member-3.png";
-import Member4 from "../images/member-4.png";
+import Member1 from "../../images/member-1.png";
+import Member2 from "../../images/member-2.png";
+import Member3 from "../../images/member-3.png";
+import Member4 from "../../images/member-4.png";
 
 import React from "react";
 

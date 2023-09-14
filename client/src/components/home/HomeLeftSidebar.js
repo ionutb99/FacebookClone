@@ -1,7 +1,7 @@
-import Shortcut1 from "../images/shortcut-1.png";
-import Shortcut2 from "../images/shortcut-2.png";
-import Shortcut3 from "../images/shortcut-3.png";
-import Shortcut4 from "../images/shortcut-4.png";
+import Shortcut1 from "../../images/shortcut-1.png";
+import Shortcut2 from "../../images/shortcut-2.png";
+import Shortcut3 from "../../images/shortcut-3.png";
+import Shortcut4 from "../../images/shortcut-4.png";
 import {
     LiveTvOutlined,
   LocalGroceryStore,

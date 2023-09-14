@@ -24,8 +24,8 @@ export const EditPhotos = ({ currentUser, setCurrentUser }) => {
       const formData = new FormData();
       formData.append("profileImage", profileImage);
       formData.append("coverPhoto", coverPhoto);
-      formData.append("firstName", firstName); // Add firstName
-      formData.append("lastName", lastName); // Add lastName
+      formData.append("firstName", firstName); 
+      formData.append("lastName", lastName); 
 
       const response = await axios.put(
         `/api/photos/update/${currentUser._id}`,

@@ -4,14 +4,14 @@ import {
   EmailOutlined,
   OndemandVideoOutlined,
 } from "@mui/icons-material";
-import logo from "../images/logo.png";
-import search from "../images/search.png";
-import FeedbackImg from "../images/feedback.png";
-import SettingsImg from "../images/setting.png";
-import ArrowImg from "../images/arrow.png";
-import HelpImg from "../images/help.png";
-import DisplayImg from "../images/display.png";
-import LogoutImg from "../images/logout.png";
+import logo from "../../images/logo.png";
+import search from "../../images/search.png";
+import FeedbackImg from "../../images/feedback.png";
+import SettingsImg from "../../images/setting.png";
+import ArrowImg from "../../images/arrow.png";
+import HelpImg from "../../images/help.png";
+import DisplayImg from "../../images/display.png";
+import LogoutImg from "../../images/logout.png";
 import { useNavigate } from "react-router-dom";
 
 export const Navbar = ({ currentUser, setCurrentUser }) => {

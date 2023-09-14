@@ -1,6 +1,6 @@
 import React from "react";
 import { Add, MoreHoriz} from "@mui/icons-material";
-import { addFriendHandle } from "../helpers/AddFriendHandle";
+import { addFriendHandle } from "../../helpers/AddFriendHandle";
 
 const FriendProfileDetails = ({
   user,

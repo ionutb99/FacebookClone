@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import FriendProfileDetails from "../components/FriendProfileDetails";
-import ProfileInfoContent from "../components/FriendProfileInfo";
+import FriendProfileDetails from "../components/friendProfile/FriendProfileDetails";
+import FriendProfileInfo from "../components/friendProfile/FriendProfileInfo";
 
 export const FriendProfile = ({
   friendId,
@@ -49,7 +49,7 @@ export const FriendProfile = ({
         users={users}
         setUsers={setUsers}
       />
-      <ProfileInfoContent user={user } />
+      <FriendProfileInfo user={user } />
 
     </div>
   );

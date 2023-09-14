@@ -1,14 +1,14 @@
 import "./App.css";
-import { Navbar } from "./components/Navbar";
+import { Navbar } from "./components/navbar/Navbar";
 import { Home } from "./pages/Home";
-import { Footer } from "./components/Footer.js";
+import { Footer } from "./components/footer/Footer.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Profile } from "./pages/Profile";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register.js";
 import { useState } from "react";
-import { UpdateProfileInfo } from "./helpers/UpdateProfileInfo";
-import { EditPhotos } from "./helpers/EditPhotos";
+import { UpdateProfileInfo } from "./components/updateProfile/UpdateProfileInfo";
+import { EditPhotos } from "./components/updateProfile/EditPhotos";
 import { FriendProfile } from "./pages/FriendProfile";
 
 
