@@ -49,7 +49,7 @@ export const FriendProfile = ({
         users={users}
         setUsers={setUsers}
       />
-      <FriendProfileInfo user={user } />
+      <FriendProfileInfo user={user } currentUser={currentUser} setFriendId={setFriendId} />
 
     </div>
   );

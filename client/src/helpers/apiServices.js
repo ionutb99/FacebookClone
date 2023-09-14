@@ -75,8 +75,8 @@ export const deletePost = async (postId, setCurrentUser) => {
   }
 
   export const fetchFriendData = async (friendsWithStatusFriends) => {
-    const friendIds = friendsWithStatusFriends.map((friend) => friend.user_id);
-    const friendPromises = friendIds.map(async (friendId) => {
+    const friendIds = friendsWithStatusFriends?.map((friend) => friend.user_id);
+    const friendPromises = friendIds?.map(async (friendId) => {
       try {
         const response = await axios.get(`/api/user/${friendId}`);
         return response.data;

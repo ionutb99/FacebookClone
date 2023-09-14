@@ -4,13 +4,17 @@ import { LeftSidebar } from "../components/home/HomeLeftSidebar";
 import { RightSidebar } from "../components/home/HomeRightSidebar";
 import { HomeMainContent } from "../components/home/HomeMainContent";
 
-export const Home = ({ currentUser, setFriendId, users, setUsers }) => {
+export const Home = ({
+  currentUser,
+  setCurrentUser,
+  setFriendId,
+  users,
+  setUsers,
+}) => {
   useEffect(() => {
     localStorage.removeItem("friendUser");
     fetchUsers(setUsers);
   }, []);
-
-  
 
   return (
     <div className="container">
@@ -19,6 +23,7 @@ export const Home = ({ currentUser, setFriendId, users, setUsers }) => {
           <LeftSidebar />
           <HomeMainContent
             currentUser={currentUser}
+            setCurrentUser={setCurrentUser}
             users={users}
             setFriendId={setFriendId}
             setUsers={setUsers}

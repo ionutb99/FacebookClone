@@ -59,24 +59,6 @@ export const RightSidebar = () => {
         </div>
         <p> Alison Mina</p>
       </div>
-      <div className="online-list">
-        <div className="online">
-          <img src={Member2} alt="member2" />
-        </div>
-        <p> Jackson Aston</p>
-      </div>
-      <div className="online-list">
-        <div className="online">
-          <img src={Member3} alt="member3" />
-        </div>
-        <p> Samona Rose</p>
-      </div>
-      <div className="online-list">
-        <div className="online">
-          <img src={Member4} alt="member4" />
-        </div>
-        <p> John Doe</p>
-      </div>
     </div>
   );
 };

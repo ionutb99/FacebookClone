@@ -1,20 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   VideoCall,
   PhotoCamera,
   InsertEmoticonOutlined,
 } from "@mui/icons-material";
 import { AttachFile } from "@mui/icons-material";
+import { addPost } from "./apiServices";
 
 export const PostCreationContent = ({
-  postText,
-  setPostText,
-  handlePost,
-  togglePhotoVideoOverlay,
-  setPhotoVideoContent,
-  isPhotoVideoOverlayOpen,
-  handleSavePhotoVideoContent,
+  currentUser, setCurrentUser
 }) => {
+  const [postText, setPostText] = useState("");
+  const [photoVideoContent, setPhotoVideoContent] = useState(null);
+  const [isPhotoVideoOverlayOpen, setIsPhotoVideoOverlayOpen] = useState(false);
+  
+  const togglePhotoVideoOverlay = () => {
+    setIsPhotoVideoOverlayOpen(!isPhotoVideoOverlayOpen);
+  };
+
+  const handleSavePhotoVideoContent = () => {
+    console.log("Photo/Video content:", photoVideoContent);
+    setIsPhotoVideoOverlayOpen(false);
+  };
+
+  const handlePost = async () => {
+    addPost(
+      currentUser,
+      setCurrentUser,
+      setPostText,
+      setPhotoVideoContent,
+      postText,
+      photoVideoContent
+    );
+  };
+
+
   return (
     <div className="post-input-container">
       <div className="input-row">

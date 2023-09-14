@@ -25,9 +25,11 @@ import {
 } from "../../helpers/scrollUtils";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { PostCreationContent } from "../../helpers/postCreationContent";
 
 export const HomeMainContent = ({
   currentUser,
+  setCurrentUser,
   users,
   setFriendId,
   setUsers,
@@ -161,27 +163,8 @@ export const HomeMainContent = ({
           </div>
         </div>
 
-        <div className="post-input-container">
-          <div className="input-row">
-            <textarea
-              rows="3"
-              placeholder="What's on your mind, John?"
-            ></textarea>
-          </div>
-          <div className="add-post-links">
-            <a>
-              <VideoCall className="addPostIconLive" /> Live Video
-            </a>
-            <a>
-              <PhotoCamera className="addPostIconPhoto" /> Photo/Video
-            </a>
-            <a>
-              <InsertEmoticonOutlined className="addPostIconFeeling" />{" "}
-              Feeling/Activity{" "}
-            </a>
-          </div>
-        </div>
-        
+        <PostCreationContent currentUser={currentUser} setCurrentUser={setCurrentUser} />
+
       </div>
 
       <br />

@@ -5,14 +5,9 @@ import { PostCreationContent } from "./postCreationContent";
 
 const PostInput = ({
   currentUser,
-  postText,
-  setPostText,
-  handlePost,
-  togglePhotoVideoOverlay,
-  setPhotoVideoContent,
-  isPhotoVideoOverlayOpen,
-  handleSavePhotoVideoContent,
+  setCurrentUser
 }) => {
+
   return (
     <div className="write-post-container">
       <div className="user-profile">
@@ -24,15 +19,7 @@ const PostInput = ({
           </small>
         </div>
       </div>
-      <PostCreationContent
-        postText={postText}
-        setPostText={setPostText}
-        handlePost={handlePost}
-        togglePhotoVideoOverlay={togglePhotoVideoOverlay}
-        setPhotoVideoContent={setPhotoVideoContent}
-        isPhotoVideoOverlayOpen={isPhotoVideoOverlayOpen}
-        handleSavePhotoVideoContent={handleSavePhotoVideoContent}
-      />
+      <PostCreationContent currentUser={currentUser} setCurrentUser={setCurrentUser}/>
     </div>
   );
 };

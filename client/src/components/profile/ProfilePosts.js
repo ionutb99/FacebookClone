@@ -11,13 +11,11 @@ import { ProfileIntro } from "./ProfileIntro";
 import { ProfilePhotos } from "./ProfilePhotos";
 import { ProfileFriends } from "./ProfileFriends";
 import PostInput from "../../helpers/postCreation";
-import { addPost, deletePost } from "../../helpers/apiServices";
+import { deletePost } from "../../helpers/apiServices";
 
 export const ProfilePosts = ({ currentUser, setFriendId, setCurrentUser }) => {
-  const [postText, setPostText] = useState("");
-  const [photoVideoContent, setPhotoVideoContent] = useState(null);
-  const [isPhotoVideoOverlayOpen, setIsPhotoVideoOverlayOpen] = useState(false);
   const [activePostId, setActivePostId] = useState(null);
+  
 
   const handlePostSettings = (postId) => {
     setActivePostId(postId === activePostId ? null : postId);
@@ -28,25 +26,7 @@ export const ProfilePosts = ({ currentUser, setFriendId, setCurrentUser }) => {
     await deletePost(postId, setCurrentUser);
   };
 
-  const handlePost = async () => {
-    addPost(
-      currentUser,
-      setCurrentUser,
-      setPostText,
-      setPhotoVideoContent,
-      postText,
-      photoVideoContent
-    );
-  };
 
-  const togglePhotoVideoOverlay = () => {
-    setIsPhotoVideoOverlayOpen(!isPhotoVideoOverlayOpen);
-  };
-
-  const handleSavePhotoVideoContent = () => {
-    console.log("Photo/Video content:", photoVideoContent);
-    setIsPhotoVideoOverlayOpen(false);
-  };
   return (
     <div className="profile-info">
       <div className="info-col">
@@ -57,13 +37,7 @@ export const ProfilePosts = ({ currentUser, setFriendId, setCurrentUser }) => {
       <div className="post-col">
         <PostInput
           currentUser={currentUser}
-          postText={postText}
-          setPostText={setPostText}
-          handlePost={handlePost}
-          togglePhotoVideoOverlay={togglePhotoVideoOverlay}
-          setPhotoVideoContent={setPhotoVideoContent}
-          isPhotoVideoOverlayOpen={isPhotoVideoOverlayOpen}
-          handleSavePhotoVideoContent={handleSavePhotoVideoContent}
+          setCurrentUser={setCurrentUser}
         />
 
         {currentUser?.posts?.map((post, idx) => (

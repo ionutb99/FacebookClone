@@ -20,10 +20,11 @@ export const ProfileFriends = ({ currentUser, setFriendId }) => {
       const fetchData = async () => {
         const friendDataArray = await fetchFriendData(friendsWithStatusFriends);
         setFriendData(friendDataArray);
-      };
+      };   
   
       fetchData();
     }, []);
+    
   return (
     <div className="profile-intro">
       <div className="title-box">

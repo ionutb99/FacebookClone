@@ -4,16 +4,36 @@ import ProfileHome from "../../images/profile-home.png";
 import ProfileLocation from "../../images/profile-location.png";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  ForumOutlined,
-  ShareOutlined,
-  ThumbUp,
-} from "@mui/icons-material";
+import { ForumOutlined, ShareOutlined, ThumbUp } from "@mui/icons-material";
 
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { fetchFriendData } from "../../helpers/apiServices";
 
-import React from "react";
+const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
+  const [friendData, setFriendData] = useState([]);
 
-const FriendProfileInfo = ({ user }) => {
+  const navigate = useNavigate();
+
+  const friendsWithStatusFriends = currentUser?.friends.filter(
+      (friend) => friend.friendship_status === "friends"
+    );
+
+  const handleFriendProfile = (personIds) => {
+    setFriendId(personIds);
+    navigate(`/user/${personIds}`);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const friendDataArray = await fetchFriendData(friendsWithStatusFriends);
+      setFriendData(friendDataArray);
+    };   
+
+    fetchData();
+  }, []);
+
+  console.log(user)
   return (
     <div className="profile-info">
       <div className="info-col">
@@ -69,6 +89,21 @@ const FriendProfileInfo = ({ user }) => {
             <a href="#">All Friends</a>
           </div>
           <p>{user?.friends?.length} ( 0 mutual)</p>
+
+          <div className="friend-box">
+            {friendData?.map((friend) => (
+              <div key={friend._id}>
+                <img
+                  src={`../images/${friend.profileImage}`}
+                  alt={`profile-${friend._id}`}
+                  onClick={() => handleFriendProfile(friend._id)}
+                />
+                <p>
+                  {friend.firstName} {friend.lastName}
+                </p>
+              </div>
+            ))}
+          </div>
 
           <div className="friend-box"></div>
         </div>

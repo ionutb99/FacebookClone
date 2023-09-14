@@ -23,7 +23,7 @@ function App() {
     <Router>
       <Navbar setCurrentUser={setCurrentUser} currentUser={currentUser} />
       <Routes>
-        <Route path="/" element={<Home  currentUser={currentUser} setFriendId={setFriendId} setCurrentUser={setCurrentUser} users={users} setUsers={setUsers} />} />
+        <Route path="/" element={<Home  currentUser={currentUser} setCurrentUser={setCurrentUser} setFriendId={setFriendId} users={users} setUsers={setUsers} />} />
         <Route path="/profile" element={<Profile currentUser={currentUser} setCurrentUser={setCurrentUser} setFriendId={setFriendId} />} />
         <Route path="/login" element={<Login currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
         <Route path="/register" element={<Register />} />
