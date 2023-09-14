@@ -10,6 +10,7 @@ export const Home = ({ currentUser, setFriendId, users, setUsers }) => {
     fetchUsers(setUsers);
   }, []);
 
+  
 
   return (
     <div className="container">
