@@ -120,6 +120,17 @@ export const HomeMainContent = ({
     window.location.reload();
   };
 
+  const peopleYouKnow = users
+    .filter((person) => person._id !== currentUser._id)
+    .filter((person) => {
+      const friendStatus = currentUser.friends?.find(
+        (friend) => friend.user_id === person._id
+      )?.friendship_status;
+
+      return friendStatus !== "friends";
+    });
+
+
   return (
     <div className="main-content">
       <div className="story-gallery">
@@ -163,94 +174,98 @@ export const HomeMainContent = ({
           </div>
         </div>
 
-        <PostCreationContent currentUser={currentUser} setCurrentUser={setCurrentUser} />
-
+        <PostCreationContent
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+        />
       </div>
 
       <br />
 
-      <div className="people-you-might-know">
-        <ArrowCircleLeftOutlined
-          onClick={handleScrollToPreviousPerson}
-          className="arrow-left-friends "
-        />
-        <h2>People You Might Know</h2>
-        <div className="people-cards-container" ref={containerRef}>
-          <div className="people-cards">
-            {users
-              .filter((person) => person._id !== currentUser._id)
-              .filter((person) => {
-                const friendStatus = currentUser.friends?.find(
-                  (friend) => friend.user_id === person._id
-                )?.friendship_status;
-
-                return friendStatus !== "friends";
-              })
-              .map((person) => (
-                <div key={person._id} className="person-card">
-                  <img
-                    src={`../images/${person.profileImage}`}
-                    alt={person.name}
-                    onClick={() => profileImageClicked(person._id)}
-                  />
-                  <h3>
-                    {person.firstName} {person.lastName}
-                  </h3>
-
-                  {currentUser.friends?.find(
+      {peopleYouKnow.length > 0 && (
+        <div className="people-you-might-know">
+          <ArrowCircleLeftOutlined
+            onClick={handleScrollToPreviousPerson}
+            className="arrow-left-friends "
+          />
+          <h2>People You Might Know</h2>
+          <div className="people-cards-container" ref={containerRef}>
+            <div className="people-cards">
+              {users
+                .filter((person) => person._id !== currentUser._id)
+                .filter((person) => {
+                  const friendStatus = currentUser.friends?.find(
                     (friend) => friend.user_id === person._id
-                  ) ? (
-                    currentUser.friends?.find(
+                  )?.friendship_status;
+
+                  return friendStatus !== "friends";
+                })
+                .map((person) => (
+                  <div key={person._id} className="person-card">
+                    <img
+                      src={`../images/${person.profileImage}`}
+                      alt={person.name}
+                      onClick={() => profileImageClicked(person._id)}
+                    />
+                    <h3>
+                      {person.firstName} {person.lastName}
+                    </h3>
+
+                    {currentUser.friends?.find(
                       (friend) => friend.user_id === person._id
-                    ).friendship_status === "request" ? (
-                      <div className="request-buttons">
-                        <DoneOutline
-                          style={{ cursor: "pointer" }}
-                          onClick={() => acceptFriendRequest(person._id)}
-                        />
-                        <Close
-                          style={{ cursor: "pointer" }}
-                          onClick={() => declineFriendRequest(person._id)}
-                        />
-                      </div>
+                    ) ? (
+                      currentUser.friends?.find(
+                        (friend) => friend.user_id === person._id
+                      ).friendship_status === "request" ? (
+                        <div className="request-buttons">
+                          <DoneOutline
+                            style={{ cursor: "pointer" }}
+                            onClick={() => acceptFriendRequest(person._id)}
+                          />
+                          <Close
+                            style={{ cursor: "pointer" }}
+                            onClick={() => declineFriendRequest(person._id)}
+                          />
+                        </div>
+                      ) : (
+                        <div className="add-friend-btn">
+                          <span>
+                            {
+                              currentUser.friends?.find(
+                                (friend) => friend.user_id === person._id
+                              ).friendship_status
+                            }
+                          </span>
+                        </div>
+                      )
                     ) : (
                       <div className="add-friend-btn">
-                        <span>
-                          {
-                            currentUser.friends?.find(
-                              (friend) => friend.user_id === person._id
-                            ).friendship_status
+                        <div
+                          onClick={() =>
+                            addFriendHandle(
+                              person._id,
+                              currentUser,
+                              setFriendId,
+                              users,
+                              setUsers
+                            )
                           }
-                        </span>
+                        >
+                          <PersonAdd />
+                          <span> Add </span>
+                        </div>
                       </div>
-                    )
-                  ) : (
-                    <div className="add-friend-btn">
-                      <div
-                        onClick={() =>
-                          addFriendHandle(
-                            person._id,
-                            currentUser,
-                            setFriendId,
-                            users,
-                            setUsers
-                          )
-                        }
-                      >
-                        <PersonAdd />
-                        <span> Add </span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                ))}
+            </div>
           </div>
+          <ArrowCircleRightOutlined
+            onClick={handleScrollToNextPerson}
+            className="arrow-right-friends"
+          />
         </div>
-        <ArrowCircleRightOutlined
-          onClick={handleScrollToNextPerson}
-          className="arrow-right-friends"
-        />
-      </div>
+      )}
 
       <br />
       <PostContentHome />

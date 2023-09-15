@@ -18,14 +18,15 @@ function App() {
   );
   const [friendId , setFriendId] = useState("");
   const [users, setUsers] = useState([]); 
+  let [loading, setLoading] = useState(false);
 
   return (
     <Router>
-      <Navbar setCurrentUser={setCurrentUser} currentUser={currentUser} />
+      <Navbar setCurrentUser={setCurrentUser} currentUser={currentUser} loading={loading} setLoading={setLoading}  />
       <Routes>
-        <Route path="/" element={<Home  currentUser={currentUser} setCurrentUser={setCurrentUser} setFriendId={setFriendId} users={users} setUsers={setUsers} />} />
-        <Route path="/profile" element={<Profile currentUser={currentUser} setCurrentUser={setCurrentUser} setFriendId={setFriendId} />} />
-        <Route path="/login" element={<Login currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
+        <Route path="/" element={<Home  currentUser={currentUser} setCurrentUser={setCurrentUser} setFriendId={setFriendId} users={users} setUsers={setUsers} loading={loading} setLoading={setLoading} />} />
+        <Route path="/login" element={<Login currentUser={currentUser} setCurrentUser={setCurrentUser} loading={loading} setLoading={setLoading} />} />
+        <Route path="/profile" element={<Profile currentUser={currentUser} setCurrentUser={setCurrentUser} setFriendId={setFriendId} loading={loading} />} />
         <Route path="/register" element={<Register />} />
         <Route path={`/profile/update-info/${currentUser?._id}`} element={<UpdateProfileInfo currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
         <Route path={`/photos/update/${currentUser?._id}`} element={<EditPhotos currentUser={currentUser} setCurrentUser={setCurrentUser} />} />

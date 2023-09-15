@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ClipLoader from "react-spinners/ClipLoader";
 
-export const Login = ({ currentUser, setCurrentUser }) => {
+export const Login = ({ currentUser, setCurrentUser, loading, setLoading }) => {
   const [err, setErr] = useState();
   const [formData, setFormData] = useState({
     email: "",
@@ -24,10 +27,12 @@ export const Login = ({ currentUser, setCurrentUser }) => {
 
       if (response.data.error) {
         setErr("Incorect Email or Password!");
+        toast.warn("Incorect Email or Password!");
         return;
       }
 
       setErr();
+      setLoading(true);
       setCurrentUser(response.data);
       setFormData({
         email: "",
@@ -36,6 +41,7 @@ export const Login = ({ currentUser, setCurrentUser }) => {
 
       console.log("User logged in:", response.data);
       setTimeout(() => {
+        setLoading(false);
         navigate("/");
       }, 500);
     } catch (error) {
@@ -52,11 +58,6 @@ export const Login = ({ currentUser, setCurrentUser }) => {
       <div className="login-container">
         <form onSubmit={handleSubmit}>
           <h1>Sign In</h1>
-          {err && (
-            <h2 style={{ textAlign: "center", fontSize: "15px", color: "red" }}>
-              {err}
-            </h2>
-          )}
           <input
             type="email"
             placeholder="Email"
@@ -79,12 +80,14 @@ export const Login = ({ currentUser, setCurrentUser }) => {
               Sign In
             </button>
           ) : (
-            <p>You are already signed in!</p>
+            <p style={{ textAlign: "center", color: "#d65757" }}>
+              You are already signed in!
+            </p>
           )}
           <span>
             New to <b>B</b>Social?{" "}
             <a href="/register">
-              <b>Sign up now.</b>
+              <b style={{ color: "#007bff" }}>Sign up now.</b>
             </a>
           </span>
           <small>
@@ -92,7 +95,16 @@ export const Login = ({ currentUser, setCurrentUser }) => {
             bot. <b>Learn more</b>.
           </small>
         </form>
+        <ClipLoader
+        color="red"
+        loading={loading}
+        size={100}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      />
       </div>
+      
+      {err && <ToastContainer />}
     </div>
   );
 };

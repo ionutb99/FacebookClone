@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Register = () => {
   const [err, setErr] = useState();
@@ -25,6 +27,7 @@ export const Register = () => {
       const response = await axios.post(`api/users`, formData);
       if (response.data.error) {
         setErr("Email already used!");
+        toast.warn(" Email already used!");
         console.log("Email already used!");
         return;
       }
@@ -52,7 +55,6 @@ export const Register = () => {
       <div className="register-container">
         <form onSubmit={handleSubmit}>
           <h1>Sign Up</h1>
-          {err && <p style={{ textAlign: "center", color: "red" }}>{err}</p>}
           <input
             type="text"
             placeholder="First Name"
@@ -89,7 +91,10 @@ export const Register = () => {
             Sign Up
           </button>
           <span>
-            Already have an account? <a href="/login">Sign in</a>
+            Already have an account?{" "}
+            <a href="/login" style={{ color: "#007bff" }}>
+              Sign in
+            </a>
           </span>
           <small>
             This page is protected by Google reCAPTCHA to ensure you're not a
@@ -97,6 +102,9 @@ export const Register = () => {
           </small>
         </form>
       </div>
+      {err && (
+        <ToastContainer/>
+      )}
     </div>
   );
 };

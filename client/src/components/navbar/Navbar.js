@@ -14,7 +14,7 @@ import DisplayImg from "../../images/display.png";
 import LogoutImg from "../../images/logout.png";
 import { useNavigate } from "react-router-dom";
 
-export const Navbar = ({ currentUser, setCurrentUser }) => {
+export const Navbar = ({ currentUser, setCurrentUser ,loading , setLoading }) => {
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
   const [darkSite, setDarkSite] = useState(false);
 
@@ -40,10 +40,11 @@ export const Navbar = ({ currentUser, setCurrentUser }) => {
   const handleLogout = () => {
     localStorage.setItem("user", null);
     setCurrentUser(null);
-
-    setTimeout(() => {
-      navigate("/login");
-    }, 500);
+    setLoading(true);
+    setTimeout(()=> {
+      setLoading(false);
+      navigate('/login');
+    },1000)
   };
 
   useEffect(() => {
@@ -54,11 +55,11 @@ export const Navbar = ({ currentUser, setCurrentUser }) => {
     }
   }, [darkSite]);
 
-  useEffect(()=> {
+  useEffect(() => {
     if (!currentUser) {
       setIsSettingsMenuOpen(false);
     }
-  },[currentUser]);
+  }, [currentUser]);
 
   return (
     <nav>
@@ -67,7 +68,9 @@ export const Navbar = ({ currentUser, setCurrentUser }) => {
           src={logo}
           alt="logo"
           className="logo"
-          onClick={() => {currentUser && navigate("/")}}
+          onClick={() => {
+            currentUser && navigate("/");
+          }}
         />
         <ul>
           <li>
@@ -89,14 +92,30 @@ export const Navbar = ({ currentUser, setCurrentUser }) => {
           </div>
 
           <div className="nav-user-icon online" onClick={settingsMenuToggle}>
-            <img src={`../images/${currentUser?.profileImage}`} alt="" className="profile-photo-nav" />
+            <img
+              src={`../images/${currentUser?.profileImage}`}
+              alt=""
+              className="profile-photo-nav"
+            />
           </div>
         </div>
       ) : (
         <div className="nav-right">
           <div className="nav-user-icon">
-            <button type="button" className="btnNavUser" onClick={() => navigate('/login')} >Login</button>
-            <button type="button" className="btnNavUser" onClick={() => navigate('/register')} >Register</button>
+            <button
+              type="button"
+              className="btnNavUser"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </button>
+            <button
+              type="button"
+              className="btnNavUser"
+              onClick={() => navigate("/register")}
+            >
+              Register
+            </button>
           </div>
         </div>
       )}
@@ -116,7 +135,10 @@ export const Navbar = ({ currentUser, setCurrentUser }) => {
 
         <div className="settings-menu-inner">
           <div className="user-profile">
-            <img src={`../images/${currentUser?.profileImage}`} alt="profileImg" />
+            <img
+              src={`../images/${currentUser?.profileImage}`}
+              alt="profileImg"
+            />
             <div>
               <p>{currentUser?.firstName + " " + currentUser?.lastName}</p>
               <a href="/profile">See your profile</a>

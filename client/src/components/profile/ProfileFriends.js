@@ -41,7 +41,7 @@ export const ProfileFriends = ({ currentUser, setFriendId }) => {
       </p>
 
       <div className="friend-box">
-        {friendData.map((friend) => (
+        {friendData.slice(0, 6).map((friend) => (
           <div key={friend._id}>
             <img
               src={`../images/${friend.profileImage}`}

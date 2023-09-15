@@ -23,7 +23,9 @@ const FriendProfileDetails = ({
             <h3>
               {user?.firstName} {user?.lastName}
             </h3>
-            <p>{user?.friends?.length} Friends</p>
+            <p>{ user.friends && user?.friends?.filter(
+            (friend) => friend.friendship_status == "friends"
+          ).length} Friends</p>
           </div>
         </div>
       </div>
@@ -34,11 +36,11 @@ const FriendProfileDetails = ({
           <div className="friends-status">
             <h4>
               {" "}
-              {
-                user.friends.find(
+              {user.friends && 
+                (user.friends.find(
                   (friend) => friend.user_id === currentUser._id
                 )?.friendship_status
-              }
+              )}
             </h4>
           </div>
         ) : (

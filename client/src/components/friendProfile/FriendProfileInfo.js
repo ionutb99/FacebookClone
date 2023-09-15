@@ -15,13 +15,20 @@ const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
 
   const navigate = useNavigate();
 
-  const friendsWithStatusFriends = currentUser?.friends.filter(
+  const friendsWithStatusFriends = user?.friends?.filter(
       (friend) => friend.friendship_status === "friends"
     );
 
+    console.log(friendsWithStatusFriends)
+     
   const handleFriendProfile = (personIds) => {
     setFriendId(personIds);
-    navigate(`/user/${personIds}`);
+    // navigate(`/user/${personIds}`);
+    if (currentUser._id === personIds) {
+      navigate(`/profile`);
+    } else {
+      navigate(`/user/${personIds}`);
+    }
   };
 
   useEffect(() => {
@@ -31,7 +38,7 @@ const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
     };   
 
     fetchData();
-  }, []);
+  }, [user]);
 
   console.log(user)
   return (
@@ -72,14 +79,14 @@ const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
           </div>
 
           <div className="photo-box">
-            {user?.posts?.map((post, idx) => (
+            {user && (user?.posts?.map((post, idx) => (
               <div key={idx}>
                 <img
                   src={`../images/${post?.postContent}`}
                   alt="photoContent"
                 />
               </div>
-            ))}
+            )))}
           </div>
         </div>
 
@@ -88,10 +95,12 @@ const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
             <h3>Friends</h3>
             <a href="#">All Friends</a>
           </div>
-          <p>{user?.friends?.length} ( 0 mutual)</p>
+          <p>{user && (user?.friends?.filter(
+            (friend) => friend.friendship_status == "friends"
+          ).length)} ( 0 mutual)</p>
 
           <div className="friend-box">
-            {friendData?.map((friend) => (
+            {friendData && (friendData?.map((friend) => (
               <div key={friend._id}>
                 <img
                   src={`../images/${friend.profileImage}`}
@@ -102,14 +111,14 @@ const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
                   {friend.firstName} {friend.lastName}
                 </p>
               </div>
-            ))}
+            )))}
           </div>
 
           <div className="friend-box"></div>
         </div>
       </div>
       <div className="post-col">
-        {user?.posts?.map((post, idx) => (
+        {user && (user?.posts?.map((post, idx) => (
           <div className="post-container" key={idx}>
             <div className="post-row">
               <div className="user-profile">
@@ -147,7 +156,7 @@ const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
               </div>
             </div>
           </div>
-        ))}
+        )))}
       </div>
     </div>
   );
