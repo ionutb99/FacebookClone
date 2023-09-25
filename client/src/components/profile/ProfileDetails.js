@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Add, MoreHoriz } from "@mui/icons-material";
+import { Add, EditOutlined, MoreHoriz } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 export const ProfileDetails = ({ currentUser }) => {
@@ -51,7 +51,14 @@ export const ProfileDetails = ({ currentUser }) => {
           className={isSettingsProfileOpen ? "profile-settings" : ""}
           onClick={() => navigate(`/photos/update/${currentUser._id}`)}
         >
-          {isSettingsProfileOpen && "Edit"}
+          {isSettingsProfileOpen && (
+            <>
+              <div>
+                <EditOutlined />{" "}
+              </div>{" "}
+              <div className="profile-settings-div">Edit</div>
+            </>
+          )}
         </div>
       </div>
     </div>

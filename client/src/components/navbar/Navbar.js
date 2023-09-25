@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  NotificationsNone,
-  EmailOutlined,
-  OndemandVideoOutlined,
-} from "@mui/icons-material";
+import { NotificationsNone, MessageOutlined } from "@mui/icons-material";
 import logo from "../../images/logo.png";
 import search from "../../images/search.png";
 import FeedbackImg from "../../images/feedback.png";
@@ -13,10 +9,17 @@ import HelpImg from "../../images/help.png";
 import DisplayImg from "../../images/display.png";
 import LogoutImg from "../../images/logout.png";
 import { useNavigate } from "react-router-dom";
+import Member1 from "../../images/member-1.png";
 
-export const Navbar = ({ currentUser, setCurrentUser ,loading , setLoading }) => {
+export const Navbar = ({
+  currentUser,
+  setCurrentUser,
+  loading,
+  setLoading,
+}) => {
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
   const [darkSite, setDarkSite] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const navigate = useNavigate();
 
@@ -41,10 +44,10 @@ export const Navbar = ({ currentUser, setCurrentUser ,loading , setLoading }) =>
     localStorage.setItem("user", null);
     setCurrentUser(null);
     setLoading(true);
-    setTimeout(()=> {
+    setTimeout(() => {
       setLoading(false);
-      navigate('/login');
-    },1000)
+      navigate("/login");
+    }, 1000);
   };
 
   useEffect(() => {
@@ -73,16 +76,69 @@ export const Navbar = ({ currentUser, setCurrentUser ,loading , setLoading }) =>
           }}
         />
         <ul>
-          <li>
+          <li onClick={() => setShowNotifications(!showNotifications)}>
             <NotificationsNone />
           </li>
           <li>
-            <EmailOutlined />
-          </li>
-          <li>
-            <OndemandVideoOutlined />
+            <a href="/message">
+              <MessageOutlined />
+            </a>
           </li>
         </ul>
+        {showNotifications && (
+          <div className="notification-popup">
+            <h3>Notifications</h3>
+            <div className="notifications-chose">
+              <p>New</p>
+              <p>See All</p>
+            </div>
+            <div className="notification-content">
+              <div className="left-notification">
+                <img src={Member1} alt="profilePhoto" />
+              </div>
+              <div className="right-notification">
+                <p>All the notifications text is here</p>
+                <small>30 minutes</small>
+              </div>
+            </div>
+            <div className="notification-content">
+              <div className="left-notification">
+                <img src={Member1} alt="profilePhoto" />
+              </div>
+              <div className="right-notification">
+                <p>All the notifications text is here</p>
+                <small>30 minutes ago</small>
+              </div>
+            </div>
+            <div className="notification-content">
+              <div className="left-notification">
+                <img src={Member1} alt="profilePhoto" />
+              </div>
+              <div className="right-notification">
+                <p>All the notifications text is here</p>
+                <small>30 minutes ago</small>
+              </div>
+            </div>
+            <div className="notification-content">
+              <div className="left-notification">
+                <img src={Member1} alt="profilePhoto" />
+              </div>
+              <div className="right-notification">
+                <p>All the notifications text is here</p>
+                <small>30 minutes ago</small>
+              </div>
+            </div>
+            <div className="notification-content">
+              <div className="left-notification">
+                <img src={Member1} alt="profilePhoto" />
+              </div>
+              <div className="right-notification">
+                <p>All the notifications text is here</p>
+                <small>30 minutes ago</small>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       {currentUser ? (
         <div className="nav-right">

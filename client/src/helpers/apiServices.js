@@ -80,6 +80,17 @@ export const addPost = async (
   }
 };
 
+export const fetchFriendDataById = async (friendId) => {
+  try {
+    const response = await axios.get(`/api/user/${friendId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching friend data: ", error);
+    return null;
+  }
+};
+
+
 export const fetchFriendData = async (friendsWithStatusFriends) => {
   const friendIds = friendsWithStatusFriends?.map((friend) => friend.user_id);
   if (friendIds) {

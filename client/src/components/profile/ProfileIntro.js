@@ -6,6 +6,7 @@ import ProfileHome from "../../images/profile-home.png";
 import ProfileLocation from "../../images/profile-location.png";
 
 import {
+  EditOutlined,
   MoreHorizOutlined,
 } from "@mui/icons-material";
 
@@ -27,7 +28,14 @@ export const ProfileIntro = ({ currentUser }) => {
         className={isSettingsIntroOpen ? "intro-settings" : ""}
         onClick={() => navigate(`/profile/update-info/${currentUser._id}`)}
       >
-        {isSettingsIntroOpen && "Edit"}
+        {isSettingsIntroOpen && (
+            <>
+              <div>
+                <EditOutlined />{" "}
+              </div>{" "}
+              <div className="profile-settings-div">Edit</div>
+            </>
+          )}
       </div>
       <p className="intro-text">{currentUser?.intro} </p>
       <hr />

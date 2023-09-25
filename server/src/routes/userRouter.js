@@ -28,6 +28,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Get Single User 
 router.get("/user/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
@@ -44,6 +45,7 @@ router.get("/user/:userId", async (req, res) => {
   }
 });
 
+// POST register
 router.post("/users", async (req, res) => {
   try {
     // Hash the password
@@ -64,6 +66,7 @@ router.post("/users", async (req, res) => {
   }
 });
 
+// POST Login 
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -86,6 +89,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// POST create post
 router.post("/posts/create/:userId", upload.single("postContent"), async (req, res) => {
   try {
     const { userId } = req.params;
@@ -116,6 +120,7 @@ router.post("/posts/create/:userId", upload.single("postContent"), async (req, r
   }
 });
 
+// POST Add friend
 router.post("/add-friend/:currentUserId/:friendId", async (req, res) => {
   try {
     const { friendId, currentUserId } = req.params;
@@ -197,6 +202,41 @@ router.post("/decline-friend-request/:currentUserId/:friendId", async (req, res)
   }
 });
 
+// Add comment on post
+router.post("/posts/add-comment/:postId", async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { text, userId } = req.body; 
+
+    const user = await User.findOne({ "posts._id": postId });
+
+    if (!user) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    const post = user.posts.find((p) => p._id.toString() === postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    const newComment = {
+      text: text,
+      user_id: userId , 
+    };
+
+    post.comments.push(newComment);
+
+    await user.save();
+
+    res.status(201).json(post);
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
 // Update Profile Intro
 router.put("/profile/update-about/:userId", async (req, res) => {
   try {
@@ -231,6 +271,7 @@ router.put("/profile/update-about/:userId", async (req, res) => {
   }
 });
 
+// Edit / Upload photos
 router.put(
   "/photos/update/:userId",
   upload.fields([
@@ -272,6 +313,7 @@ router.put(
   }
 );
 
+// Delete specific posst
 router.delete("/posts/delete/:postId", async (req, res) => {
   try {
     const { postId } = req.params;

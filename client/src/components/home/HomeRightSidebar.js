@@ -2,18 +2,37 @@ import Advertisement from "../../images/advertisement.png";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Member1 from "../../images/member-1.png";
-import Member2 from "../../images/member-2.png";
-import Member3 from "../../images/member-3.png";
-import Member4 from "../../images/member-4.png";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { fetchFriendData } from "../../helpers/apiServices";
+import { useNavigate } from "react-router-dom";
 
-export const RightSidebar = () => {
+export const RightSidebar = ({ currentUser }) => {
+  const [friendData, setFriendData] = useState([]);
+
+  const navigate = useNavigate();
+  
+  const friendsWithStatusFriends = currentUser?.friends.filter(
+    (friend) => friend.friendship_status === "friends"
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+
+      const friendDataArray = await fetchFriendData(friendsWithStatusFriends);
+      setFriendData(friendDataArray.slice(0, 5));
+    };   
+
+    fetchData();
+  }, []);
+  
+  console.log(friendData)
+  
   return (
     <div className="right-sidebar">
       <div className="sidebar-title">
         <h4> Events</h4>
-        <a href="#"> See All</a>
+        <a href="#"> See All</a> 
       </div>
 
       <div className="event">
@@ -54,10 +73,15 @@ export const RightSidebar = () => {
       </div>
 
       <div className="online-list">
-        <div className="online">
-          <img src={Member1} alt="member1" />
-        </div>
-        <p> Alison Mina</p>
+        {friendData && friendData
+          .map((user, idx) => (
+            <div key={idx} className="online-content-list" onClick={() => navigate('/message')} >
+              <div className="online">
+                <img src={Member1} alt="userFriend" />
+              </div>
+              <p>{user.firstName}{" "}{user.lastName}</p>
+            </div>
+          ))}
       </div>
     </div>
   );

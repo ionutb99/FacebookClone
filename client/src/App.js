@@ -10,6 +10,7 @@ import { useState } from "react";
 import { UpdateProfileInfo } from "./components/updateProfile/UpdateProfileInfo";
 import { EditPhotos } from "./components/updateProfile/EditPhotos";
 import { FriendProfile } from "./pages/FriendProfile";
+import { Message } from "./pages/Message";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/login" element={<Login currentUser={currentUser} setCurrentUser={setCurrentUser} loading={loading} setLoading={setLoading} />} />
         <Route path="/profile" element={<Profile currentUser={currentUser} setCurrentUser={setCurrentUser} setFriendId={setFriendId} loading={loading} />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/message" element={<Message />} />
         <Route path={`/profile/update-info/${currentUser?._id}`} element={<UpdateProfileInfo currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
         <Route path={`/photos/update/${currentUser?._id}`} element={<EditPhotos currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
         <Route path={`/user/${friendId}`} element={<FriendProfile currentUser={currentUser} friendId={friendId} setFriendId={setFriendId} users={users} setUsers={setUsers} />} />

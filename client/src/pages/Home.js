@@ -44,7 +44,7 @@ export const Home = ({
             setFriendId={setFriendId}
             setUsers={setUsers}
           />
-          <RightSidebar />
+          <RightSidebar currentUser={currentUser} />
         </div>
       ) : (
         <div className="not-logged-in" onMouseMove={handleNotLogin}>

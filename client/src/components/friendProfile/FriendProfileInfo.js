@@ -100,7 +100,7 @@ const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
           ).length)} ( 0 mutual)</p>
 
           <div className="friend-box">
-            {friendData && (friendData?.map((friend) => (
+            {friendData && (friendData?.slice(0, 6).map((friend) => (
               <div key={friend._id}>
                 <img
                   src={`../images/${friend.profileImage}`}
@@ -113,8 +113,6 @@ const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
               </div>
             )))}
           </div>
-
-          <div className="friend-box"></div>
         </div>
       </div>
       <div className="post-col">
