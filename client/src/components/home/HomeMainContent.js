@@ -7,9 +7,6 @@ import Member3 from "../../images/member-3.png";
 import Member4 from "../../images/member-4.png";
 import UploadImg1 from "../../images/upload.png";
 import {
-  VideoCall,
-  PhotoCamera,
-  InsertEmoticonOutlined,
   PersonAdd,
   ArrowCircleRightOutlined,
   ArrowCircleLeftOutlined,

@@ -11,11 +11,16 @@ export const ProfileFriends = ({ currentUser, setFriendId }) => {
         (friend) => friend.friendship_status === "friends"
       );
   
-    const handleFriendProfile = (personIds) => {
-      setFriendId(personIds);
-      navigate(`/user/${personIds}`);
-    };
-  
+      const handleFriendProfile = (friendId) => {
+        const friend = friendData.find((friend) => friend._id === friendId);
+    
+        if (friend) {
+          localStorage.setItem("friendProfile", JSON.stringify(friend));
+          setFriendId(friendId);
+          navigate(`/user/${friendId}`);
+        }
+      };
+
     useEffect(() => {
       const fetchData = async () => {
         const friendDataArray = await fetchFriendData(friendsWithStatusFriends);

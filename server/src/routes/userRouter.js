@@ -152,6 +152,36 @@ router.post("/add-friend/:currentUserId/:friendId", async (req, res) => {
   }
 });
 
+// Create a new message
+router.post("/send-message", async (req, res) => {
+  try {
+    const { sender_id, recipient_id, text } = req.body;
+    
+
+    const newMessage = {
+      sender_id,
+      recipient_id,
+      text,
+      timestamp: new Date(),
+    };
+
+    await User.findOneAndUpdate(
+      { _id: sender_id },
+      { $push: { messages: newMessage } }
+    );
+
+    await User.findOneAndUpdate(
+      { _id: recipient_id },
+      { $push: { messages: newMessage } }
+    );
+
+    res.status(201).json({ message: "Message sent successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+
 // Accept friend request
 router.post("/accept-friend-request/:currentUserId/:friendId", async (req, res) => {
   try {

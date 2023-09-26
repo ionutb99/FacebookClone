@@ -11,21 +11,23 @@ export const FriendProfile = ({
   setUsers,
 }) => {
   const [user, setUser] = useState([]);
-
+  
+  
   const fetchUsers = async () => {
+    const friendID = JSON.parse(localStorage.getItem('friendProfile'));
     try {
-      const response = await axios.get(`/api/user/${friendId}`);
+      const response = await axios.get(`/api/user/${friendID._id}`);
       const userData = response.data;
       setUser(userData);
 
-      localStorage.setItem("friendUser", JSON.stringify(userData));
+      localStorage.setItem("friendProfile", JSON.stringify(userData));
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
 
   useEffect(() => {
-    const savedUserData = localStorage.getItem("friendUser");
+    const savedUserData = localStorage.getItem("friendProfile");
 
     if (savedUserData) {
       const userData = JSON.parse(savedUserData);

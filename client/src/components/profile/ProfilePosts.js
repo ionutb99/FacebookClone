@@ -25,6 +25,11 @@ export const ProfilePosts = ({ currentUser, setFriendId, setCurrentUser }) => {
   const [activeCommentPostId, setActiveCommentPostId] = useState(null);
   const [showPicker, setShowPicker] = useState(false);
   const [inputStr, setInputStr] = useState("");
+  const [commentsShow, setCommentShow] = useState(false);
+
+  function showAllComments() {
+    setCommentShow(!commentsShow);
+  }
 
   const handleSendComment = async (postId) => {
     try {
@@ -193,7 +198,14 @@ export const ProfilePosts = ({ currentUser, setFriendId, setCurrentUser }) => {
                   </div>
                 </div>
                 {console.log(post)}
-                <div className="comment-content-main-section">
+                <div
+                  className={`comment-content-main-section ${
+                    commentsShow ? "show-content" : ""
+                  }`}
+                >
+                  <p className="see-all-comments" onClick={showAllComments}>
+                    {!commentsShow ? "See all comments" : "Show less comments"}
+                  </p>
                   {post?.comments[0]?.map((comment, index) => (
                     <div key={index} className="comment-content-section">
                       <img src={Member1} alt="user_image"></img>

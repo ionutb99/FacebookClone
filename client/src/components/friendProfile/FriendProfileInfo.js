@@ -23,7 +23,6 @@ const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
      
   const handleFriendProfile = (personIds) => {
     setFriendId(personIds);
-    // navigate(`/user/${personIds}`);
     if (currentUser._id === personIds) {
       navigate(`/profile`);
     } else {
@@ -99,7 +98,7 @@ const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
             (friend) => friend.friendship_status == "friends"
           ).length)} ( 0 mutual)</p>
 
-          <div className="friend-box">
+          <div className="friend-profile-friend-box">
             {friendData && (friendData?.slice(0, 6).map((friend) => (
               <div key={friend._id}>
                 <img

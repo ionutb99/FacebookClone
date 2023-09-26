@@ -892,9 +892,16 @@ nav {
   margin-left: 3%;
   width: 95%;
   margin-top: 5px;
-  max-height: 400px;
-  overflow-y: scroll;
+  max-height: 290px;
+  overflow-y: hidden;
   overflow-x: none;
+  transition: max-height 0.5s ease-in;
+}
+
+.show-content {
+  overflow-y: scroll;
+  max-height: 410px;
+  transition: max-height 0.5s ease-in;
 }
 
 .comment-content-section {
@@ -910,6 +917,12 @@ nav {
   height: 40px;
   margin-right: 10px;
   border-radius: 50%;
+}
+
+.see-all-comments {
+  color: #9a9a9a;
+  font-size: 15px;
+  cursor: pointer;
 }
 
 .comment-options {
@@ -1212,13 +1225,14 @@ nav {
 
 .friend-box div img {
   width: 100%; /* ||  70px */
-  height: 60%;
+  height: 70px;
   cursor: pointer;
   padding-bottom: 5px;
 }
 
 .friend-box img {
   width: 100%;
+  height: 70px;
   cursor: pointer;
   padding-bottom: 5px;
 }
@@ -1227,6 +1241,24 @@ nav {
   position: relative;
   width: 70%;
   height: 80%;
+}
+
+.friend-profile-friend-box {
+  display: grid;
+  grid-template-columns: repeat(3, 33%);
+  grid-template-rows: repeat(2, 55%);
+  grid-gap: 5px;
+  margin-top: 15px;
+  max-width: 380px;
+}
+
+.friend-profile-friend-box img {
+  width: 100%;
+  height: 70px;
+}
+
+.friend-profile-friend-box div {
+  cursor: pointer;
 }
 
 /* Login CSS  --------------------------------------------------------------------*/
@@ -1474,8 +1506,6 @@ span {
 
 /* MESSAGE CSS  */
 
-/* MessageApp.css */
-
 .message-app {
   display: flex;
   width: 97vw;
@@ -1565,6 +1595,7 @@ span {
 
 .conversation-main {
   position: relative;
+  height: 100%;
   flex: 1;
   padding: 20px;
   color: #626262;
@@ -1574,15 +1605,13 @@ span {
   margin-top: 0;
 }
 
-.conversation-main div {
+.conversation-main div:first-child {
   list-style: none;
   padding: 0;
-  /* overflow-y: scroll; */
-  max-height: 400px;
+  /* max-height: 90%; */
 }
 
 .conversation-main p {
-  background-color: #f9f9f9;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
@@ -1593,23 +1622,57 @@ span {
 }
 
 .conversation-section {
+  /* max-height: calc(100% - 110px); */
   display: flex;
   flex-direction: column;
+  /* position: relative; */
 }
 
 .top-main {
-  position: absolute;
+  margin-top: 15px;
+  width: 102%;
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
   top: 70px;
+  overflow-y: scroll;
+}
+
+.connected-user-messages {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  background-color: #3c88da;
+  padding: 10px;
+  border-radius: 10px;
+  margin-right: auto;
+}
+
+.recevieved-messages {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-end;
+  background-color: #ccc;
+  padding: 10px;
+  border-radius: 10px;
+  margin-left: auto;
+  margin-right: 4px;
+}
+
+.recevieved-messages small,
+.connected-user-messages small {
+  font-size: 11px;
 }
 
 .bottom-main {
   position: absolute;
   display: flex;
+  /* align-self: flex-end; */
   flex-direction: row;
   align-items: center;
   bottom: 0;
   width: 100%;
-  height: 15%;
+  height: 100px;
 }
 
 .bottom-main button {

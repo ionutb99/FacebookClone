@@ -21,6 +21,8 @@ function App() {
   const [users, setUsers] = useState([]); 
   let [loading, setLoading] = useState(false);
 
+  const friendID = JSON.parse(localStorage.getItem('friendProfile'));
+
   return (
     <Router>
       <Navbar setCurrentUser={setCurrentUser} currentUser={currentUser} loading={loading} setLoading={setLoading}  />
@@ -29,10 +31,10 @@ function App() {
         <Route path="/login" element={<Login currentUser={currentUser} setCurrentUser={setCurrentUser} loading={loading} setLoading={setLoading} />} />
         <Route path="/profile" element={<Profile currentUser={currentUser} setCurrentUser={setCurrentUser} setFriendId={setFriendId} loading={loading} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/message" element={<Message />} />
+        <Route path="/message" element={<Message currentUser={currentUser} />} />
         <Route path={`/profile/update-info/${currentUser?._id}`} element={<UpdateProfileInfo currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
         <Route path={`/photos/update/${currentUser?._id}`} element={<EditPhotos currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
-        <Route path={`/user/${friendId}`} element={<FriendProfile currentUser={currentUser} friendId={friendId} setFriendId={setFriendId} users={users} setUsers={setUsers} />} />
+        <Route path={`/user/${friendID?._id}`} element={<FriendProfile currentUser={currentUser} friendId={friendId} setFriendId={setFriendId} users={users} setUsers={setUsers} />} />
       </Routes>
       <Footer />
     </Router>
