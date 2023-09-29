@@ -142,19 +142,19 @@ export const HomeMainContent = ({
         </div>
         <div className="story story2">
           <img src={Member1} alt="member1" />
-          <p>Alison</p>
+          <p>Andreea</p>
         </div>
         <div className="story story3">
           <img src={Member2} alt="member2" />
-          <p>Jackson</p>
+          <p>Marius</p>
         </div>
         <div className="story story4">
           <img src={Member3} alt="member3" />
-          <p>Samona</p>
+          <p>Simona</p>
         </div>
         <div className="story story5">
           <img src={Member4} alt="member4" />
-          <p>John Doe</p>
+          <p>Jonny Deep</p>
         </div>
       </div>
       <div className="write-post-container">

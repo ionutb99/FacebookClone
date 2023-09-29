@@ -35,6 +35,46 @@ export const Message = ({ currentUser }) => {
     return firstNameMatch || lastNameMatch;
   });
 
+  const selectedFriend = friends.find(
+    (friend) => friend._id === selectedConversation
+  );
+
+  const currentTime = new Date();
+
+  const messageTimestamp = (message) => {
+    if (message) {
+      const messageTime = new Date(message.timestamp);
+      const timeDifferenceMs = currentTime - messageTime;
+      const seconds = Math.floor(timeDifferenceMs / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      let result;
+      if (days > 0) {
+        result = `${days} day${days > 1 ? "s ago" : ""}`;
+      } else if (hours > 0) {
+        result = `${hours} h${hours > 1 ? "s ago" : ""}`;
+      } else if (minutes > 0) {
+        result = `${minutes} min${minutes > 1 ? "s ago" : ""}`;
+      } else {
+        result = `${seconds} sec${seconds > 1 ? " ago" : ""}`;
+      }
+      
+      return result;
+    }
+    return null;
+  }
+
+  
+  const filteredMessagesForUser = selectedFriend?.messages.filter((message) => {
+    return (
+      (message.sender_id === selectedFriend._id &&
+        message.recipient_id === currentUser._id) ||
+        (message.sender_id === currentUser._id &&
+          message.recipient_id === selectedFriend._id)
+          );
+        });
+        
   useEffect(() => {
     async function getFriendsForMessages() {
       try {
@@ -74,10 +114,6 @@ export const Message = ({ currentUser }) => {
     }
   };
 
-  const selectedFriend = friends.find(
-    (friend) => friend._id === selectedConversation
-  );
-
   useEffect(() => {
     scrollToBottom();
   }, [sendMessage]);
@@ -90,7 +126,9 @@ export const Message = ({ currentUser }) => {
     textAlign: "center",
   };
 
-  // console.log(friends);
+  // console.log(filteredMessagesForUser)
+  // console.log(messageTimestamp( selectedFriend?.messages[0]))
+
 
   return (
     <div className="message-app">
@@ -107,10 +145,10 @@ export const Message = ({ currentUser }) => {
         <div className="people-sidebar">
           <h2>Friends</h2>
           <div>
-            {filteredPeople.map((person) => (
+            {filteredPeople.map((person, idx) => (
               <div
                 className="people-name"
-                key={person.id}
+                key={idx}
                 onClick={() => handleConversationClick(person._id)}
               >
                 <div className="online">
@@ -145,21 +183,17 @@ export const Message = ({ currentUser }) => {
               </h2>
               <div className="conversation-section">
                 <div className="top-main" ref={topMainRef}>
-                  {selectedFriend?.messages?.map((message, index) => (
+                  {filteredMessagesForUser.map((message, index) => (
                     <p
                       key={index}
                       className={
-                        message.sender_id === currentUser._id
+                        message.recipient_id === currentUser._id
                           ? "connected-user-messages"
                           : "recevieved-messages"
                       }
                     >
                       {message.text}
-                      <small>
-                        {message.sender_id === currentUser._id
-                          ? currentUser.firstName
-                          : selectedFriend.firstName}
-                      </small>
+                        <small>{messageTimestamp(message)} </small>
                     </p>
                   ))}
                 </div>

@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   lastName: {
     type: String,
     required: true,
-  }, 
+  },
   email: {
     type: String,
     required: true,
@@ -20,8 +20,7 @@ const userSchema = new mongoose.Schema({
   },
   profileImage: {
     type: String,
-    default:
-      "profile-default.jpg",
+    default: "profile-default.jpg",
   },
   coverPhoto: {
     type: String,
@@ -94,6 +93,13 @@ const userSchema = new mongoose.Schema({
       sender_id: { type: String },
       recipient_id: { type: String },
       text: { type: String },
+      timestamp: { type: Date, default: Date.now },
+    },
+  ],
+  story: [
+    {
+      story_id: { type: String },
+      story_Content: { type: String },
       timestamp: { type: Date, default: Date.now },
     },
   ],

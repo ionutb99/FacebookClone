@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NotificationsNone, MessageOutlined } from "@mui/icons-material";
 import logo from "../../images/logo.png";
 import search from "../../images/search.png";
@@ -14,13 +14,14 @@ import Member1 from "../../images/member-1.png";
 export const Navbar = ({
   currentUser,
   setCurrentUser,
-  loading,
   setLoading,
 }) => {
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
   const [darkSite, setDarkSite] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
 
+  const notificationPopupRef = useRef();
+  const settingsMenuRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +31,9 @@ export const Navbar = ({
     }
   }, []);
 
-  const settingsMenuToggle = () => {
+  const settingsMenuToggle = (e) => {
+    e.stopPropagation();
+
     setIsSettingsMenuOpen(!isSettingsMenuOpen);
   };
 
@@ -44,10 +47,19 @@ export const Navbar = ({
     localStorage.setItem("user", null);
     setCurrentUser(null);
     setLoading(true);
+    setShowNotifications(false)
     setTimeout(() => {
       setLoading(false);
       navigate("/login");
     }, 1000);
+  };
+
+  const handleShowNotifications = (e) => {
+    e.stopPropagation();
+
+    if (currentUser) {
+      setShowNotifications(!showNotifications);
+    }
   };
 
   useEffect(() => {
@@ -64,6 +76,33 @@ export const Navbar = ({
     }
   }, [currentUser]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        notificationPopupRef.current &&
+        !notificationPopupRef.current.contains(event.target)
+      ) {
+        setShowNotifications(false);
+      }
+
+      if (
+        settingsMenuRef.current &&
+        !settingsMenuRef.current.contains(event.target)
+      ) {
+        setIsSettingsMenuOpen(false);
+      }
+
+    };
+
+    if (showNotifications || isSettingsMenuOpen) {
+      window.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      window.removeEventListener("click", handleClickOutside);
+    };
+  }, [showNotifications, isSettingsMenuOpen]);
+
   return (
     <nav>
       <div className="nav-left">
@@ -75,18 +114,20 @@ export const Navbar = ({
             currentUser && navigate("/");
           }}
         />
-        <ul>
-          <li onClick={() => setShowNotifications(!showNotifications)}>
-            <NotificationsNone />
-          </li>
-          <li>
-            <a href="/message">
-              <MessageOutlined />
-            </a>
-          </li>
-        </ul>
-        {showNotifications && (
-          <div className="notification-popup">
+        {currentUser && (
+          <ul>
+            <li onClick={(e) => handleShowNotifications(e)}>
+              <NotificationsNone />
+            </li>
+            <li>
+              <a href="/message">
+                <MessageOutlined />
+              </a>
+            </li>
+          </ul>
+        )}
+        {showNotifications && currentUser && (
+          <div className="notification-popup" ref={notificationPopupRef}>
             <h3>Notifications</h3>
             <div className="notifications-chose">
               <p>New</p>
@@ -147,7 +188,7 @@ export const Navbar = ({
             <input type="text" name="" id="" placeholder="Search" />
           </div>
 
-          <div className="nav-user-icon online" onClick={settingsMenuToggle}>
+          <div className="nav-user-icon online" ref={settingsMenuRef} onClick={(e) => settingsMenuToggle(e)}>
             <img
               src={`../images/${currentUser?.profileImage}`}
               alt=""
