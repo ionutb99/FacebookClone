@@ -7,6 +7,7 @@ export const FriendProfile = ({
   friendId,
   setFriendId,
   currentUser,
+  setCurrentUser,
   users,
   setUsers,
 }) => {
@@ -51,7 +52,7 @@ export const FriendProfile = ({
         users={users}
         setUsers={setUsers}
       />
-      <FriendProfileInfo user={user } currentUser={currentUser} setFriendId={setFriendId} />
+      <FriendProfileInfo user={user } currentUser={currentUser} setCurrentUser={setCurrentUser} setFriendId={setFriendId} />
 
     </div>
   );

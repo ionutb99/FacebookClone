@@ -5,15 +5,22 @@ import ProfileLocation from "../../images/profile-location.png";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ForumOutlined, ShareOutlined, ThumbUp } from "@mui/icons-material";
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchFriendData } from "../../helpers/apiServices";
+import axios from "axios";
+import CommentSection from "../../helpers/CommentSection";
 
-const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
+const FriendProfileInfo = ({ user , currentUser,setCurrentUser, setFriendId}) => {
+  const [thisCurrentUser, setThisCurrentUser] = useState([]);
   const [friendData, setFriendData] = useState([]);
+  const [activeCommentPostId, setActiveCommentPostId] = useState(null);
 
   const navigate = useNavigate();
+
+  const handleCommentInput = (postId) => {
+    setActiveCommentPostId(postId === activeCommentPostId ? null : postId);
+  };
 
   const friendsWithStatusFriends = user?.friends?.filter(
       (friend) => friend.friendship_status === "friends"
@@ -31,15 +38,27 @@ const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
   };
 
   useEffect(() => {
+    const getCurrentUser = async () => {
+      const userID = currentUser?._id;
+      try {
+        const response = await axios.get(`/api/user/${userID}`);
+        setThisCurrentUser(response.data);
+      } catch (error) {
+        console.error("Get Current User: " + error);
+      }
+    };
+
     const fetchData = async () => {
       const friendDataArray = await fetchFriendData(friendsWithStatusFriends);
       setFriendData(friendDataArray);
     };   
 
     fetchData();
-  }, [user]);
 
-  console.log(user)
+    getCurrentUser();
+  }, [user, currentUser]);
+
+
   return (
     <div className="profile-info">
       <div className="info-col">
@@ -138,7 +157,7 @@ const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
                 <div>
                   <ThumbUp className="likeButton" /> {post?.likes?.length}
                 </div>
-                <div>
+                <div  onClick={() => handleCommentInput(post._id)}>
                   <ForumOutlined className="commentShareBtn" />{" "}
                   {post?.comments?.length}
                 </div>
@@ -147,11 +166,24 @@ const FriendProfileInfo = ({ user , currentUser, setFriendId}) => {
                   {post?.shares?.length}
                 </div>
               </div>
-              <div className="post-profile-icon">
-                <img src={`../images/${user?.profileImage}`} alt="profileImg" />
-                <FontAwesomeIcon icon={faCaretDown} />
-              </div>
+              {!activeCommentPostId && (
+                <div className="post-profile-icon">
+                  <img
+                    src={`../images/${currentUser?.profileImage}`}
+                    alt="profileImg"
+                  />
+                  <FontAwesomeIcon icon={faCaretDown} />
+                </div>
+              )}
             </div>
+            {activeCommentPostId === post._id && (
+              <CommentSection
+                post={post}
+                thisCurrentUser={thisCurrentUser}
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser}
+              />
+            )}
           </div>
         )))}
       </div>

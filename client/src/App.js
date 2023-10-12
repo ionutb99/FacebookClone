@@ -34,7 +34,7 @@ function App() {
         <Route path="/message" element={<Message currentUser={currentUser} />} />
         <Route path={`/profile/update-info/${currentUser?._id}`} element={<UpdateProfileInfo currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
         <Route path={`/photos/update/${currentUser?._id}`} element={<EditPhotos currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
-        <Route path={`/user/${friendID?._id}`} element={<FriendProfile currentUser={currentUser} friendId={friendId} setFriendId={setFriendId} users={users} setUsers={setUsers} />} />
+        <Route path={`/user/${friendID?._id}`} element={<FriendProfile currentUser={currentUser} setCurrentUser={setCurrentUser} friendId={friendId} setFriendId={setFriendId} users={users} setUsers={setUsers} />} />
       </Routes>
       <Footer />
     </Router>
